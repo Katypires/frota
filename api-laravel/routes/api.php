@@ -1,0 +1,34 @@
+<?php
+
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\ItemController;
+use App\Http\Controllers\ApiFrota\AbastecimentoController;
+use App\Http\Controllers\ApiFrota\ManutencaoController;
+use App\Http\Controllers\ApiFrota\MotoristaController;
+use App\Http\Controllers\ApiFrota\TrocaOleoController;
+use App\Http\Controllers\ApiFrota\VeiculoController;
+use App\Http\Controllers\ApiFrota\VistoriaController;
+use Illuminate\Support\Facades\Route;
+
+Route::get("/teste", function(){
+    return ['teste' => true];
+});
+
+//ROTAS USUARIO
+Route::post("/auth/login", [AuthController::class, 'login']);
+Route::post("/auth/logout", [AuthController::class, 'logout']);
+Route::post("/auth/refresh", [AuthController::class, 'refresh']);
+Route::post("/user", [AuthController::class, 'create']);
+Route::get("/user", [UserController::class, 'read']);
+//ROTAS ITEM
+Route::resource('/item', ItemController::class);
+
+Route::resources([
+    'abastecimento' => AbastecimentoController::class,
+    'manutencao' => ManutencaoController::class,
+    'motorista' => MotoristaController::class,
+    'troca_oleo' => TrocaOleoController::class,
+    'veiculo' => VeiculoController::class,
+    'vistoria' => VistoriaController::class,
+]);

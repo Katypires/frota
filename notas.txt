@@ -1,0 +1,23 @@
+php artisan serve --host=10.8.2.140 --port=8000  
+
+php artisan make:model NomeModel -mcr
+
+m: Cria a migração
+c: Cria o controller
+r: Cria as funções no controller
+
+================================================
+
+php artisan make:model Motorista -mcr
+php artisan make:model Veiculo -mcr
+php artisan make:model Vistoria -mcr
+php artisan make:model Manutencao -mcr
+php artisan make:model Abastecimento -mcr
+php artisan make:model TrocaOleo -mcr
+php artisan make:model Viagem -mcr
+php artisan make:model Unidade -mcr
+php artisan make:model UnidadeVeiculo -mcr
+
+==============================================
+
+foi feito os controller: Motorista, Veiculo, Vistoria, Manutencao e Abastecimento.
