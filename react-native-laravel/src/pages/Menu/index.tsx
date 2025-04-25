@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, TextInput, ScrollView, Alert 
 import { AuthContext } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
 import { styles } from "./styles";
+import { useNavigation } from "@react-navigation/native";
 
 interface Item {
     id: string | number;
@@ -21,6 +22,7 @@ export default function Menu() {
     const [loading, setLoading] = useState<boolean>(false);
     const [editing, setEditing] = useState<boolean>(false);
     const [editingId, setEditingId] = useState<string | number | null>(null);
+    const navigation = useNavigation();
 
     const [formData, setFormData] = useState<FormData>({
         nome: "",
@@ -70,7 +72,7 @@ export default function Menu() {
             console.log(e);
         }
     }
-    
+
     async function loadEditItem(id: string | number) {
         try {
             setEditing(true);
@@ -87,13 +89,13 @@ export default function Menu() {
             console.log(e);
         }
     }
-    
+
     async function handleEditItem() {
-        try { 
+        try {
             const response = await api.put(`/item/${editingId}`, formData);
             console.log("response edit", response.data);
             setEditing(false);
-            setFormData({nome: "", descricao: ""});
+            setFormData({ nome: "", descricao: "" });
             fetchItems();
         } catch (e) {
             console.log(e);
@@ -187,6 +189,10 @@ export default function Menu() {
 
                 <TouchableOpacity style={styles.refreshButton} onPress={fetchItems} disabled={loading}>
                     <Text style={styles.refreshButtonText}>Atualizar Lista</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => navigation.navigate("Motorista")}>
+                    <Text style={{ fontSize: 16, color: "blue" }}>Ir para Motoristas</Text>
                 </TouchableOpacity>
             </View>
         </View>
