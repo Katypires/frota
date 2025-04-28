@@ -1,7 +1,10 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Menu from "../pages/Menu";
+import Home from "../pages/Home";
 import Motorista from "../pages/Motorista";
+import Unidade from "../pages/Unidade";
+import Veiculo from "../pages/Veiculo";
+import UnidadeVeiculo from "../pages/UnidadeVeiculo";
 
 const Stack = createNativeStackNavigator();
 
@@ -12,15 +15,54 @@ export type StackParamsList = {
 function AppRoutes() {
     return (
         <Stack.Navigator>
-            {/* <Stack.Screen
-                name="Menu"
-                component={Menu}
+            <Stack.Screen
+                name="Home"
+                component={Home}
                 options={{ headerShown: false }}
-            /> */}
+            />
             <Stack.Screen
                 name="Motorista"
                 component={Motorista}
-                options={{ title: "Motoristas" }}
+                options={{
+                    title: "Motoristas",
+                    headerStyle: {
+                        backgroundColor: '#333',
+                    },
+                    headerTintColor: '#FFF',
+                }}
+            />
+            <Stack.Screen
+                name="Unidade"
+                component={Unidade}
+                options={{
+                    title: "Unidades",
+                    headerStyle: {
+                        backgroundColor: '#333',
+                    },
+                    headerTintColor: '#FFF',
+                }}
+            />
+            <Stack.Screen
+                name="Veiculo"
+                component={Veiculo}
+                options={{
+                    title: "Veiculos",
+                    headerStyle: {
+                        backgroundColor: '#333',
+                    },
+                    headerTintColor: '#FFF',
+                }}
+            />
+            <Stack.Screen
+                name="UnidadeVeiculo"
+                component={UnidadeVeiculo}
+                options={{
+                    title: "Unidade Veiculos",
+                    headerStyle: {
+                        backgroundColor: '#333',
+                    },
+                    headerTintColor: '#FFF',
+                }}
             />
         </Stack.Navigator>
     );

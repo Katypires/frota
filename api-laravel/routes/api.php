@@ -9,7 +9,11 @@ use App\Http\Controllers\ApiFrota\MotoristaController;
 use App\Http\Controllers\ApiFrota\TrocaOleoController;
 use App\Http\Controllers\ApiFrota\VeiculoController;
 use App\Http\Controllers\ApiFrota\VistoriaController;
+use App\Http\Controllers\ApiFrota\ViagemController;
+use App\Http\Controllers\ApiFrota\UnidadeController;
+use App\Http\Controllers\ApiFrota\UnidadeVeiculoController;
 use Illuminate\Support\Facades\Route;
+
 
 Route::get("/teste", function(){
     return ['teste' => true];
@@ -31,4 +35,7 @@ Route::resources([
     'troca_oleo' => TrocaOleoController::class,
     'veiculo' => VeiculoController::class,
     'vistoria' => VistoriaController::class,
+    'viagem' => ViagemController::class,
+    'unidade' => UnidadeController::class,
+    'unidade_veiculo' => UnidadeVeiculoController::class,
 ]);

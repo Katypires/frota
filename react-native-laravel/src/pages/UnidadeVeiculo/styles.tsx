@@ -127,7 +127,7 @@ export const styles = StyleSheet.create({
     descColumn: {
         flex: 2,
     },
-    matriculaColumn: {
+    placaColumn: {
         flex: 1.5,
         textAlign: "center",
     },

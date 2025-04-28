@@ -121,13 +121,7 @@ export const styles = StyleSheet.create({
     nameColumn: {
         flex: 1.5,
     },
-    cpfColumn: {
-        flex: 1.5,
-    },
-    descColumn: {
-        flex: 2,
-    },
-    matriculaColumn: {
+    placaColumn: {
         flex: 1.5,
         textAlign: "center",
     },
