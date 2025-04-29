@@ -14,6 +14,7 @@ export default function Home() {
         { title: "Unidades", icon: "layers", route: "Unidade" },
         { title: "Veiculos", icon: "truck", route: "Veiculo" },
         { title: "Unidade Veiculos", icon: "truck", route: "UnidadeVeiculo" },
+        { title: "Viagem", icon: "map", route: "Viagem" },
         // { title: "Relatórios", icon: "file-text", route: "Relatorio" },
     ];
 

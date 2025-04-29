@@ -5,6 +5,7 @@ import Motorista from "../pages/Motorista";
 import Unidade from "../pages/Unidade";
 import Veiculo from "../pages/Veiculo";
 import UnidadeVeiculo from "../pages/UnidadeVeiculo";
+import Viagem from "../pages/Viagem";
 
 const Stack = createNativeStackNavigator();
 
@@ -58,6 +59,17 @@ function AppRoutes() {
                 component={UnidadeVeiculo}
                 options={{
                     title: "Unidade Veiculos",
+                    headerStyle: {
+                        backgroundColor: '#333',
+                    },
+                    headerTintColor: '#FFF',
+                }}
+            />
+            <Stack.Screen
+                name="Viagem"
+                component={Viagem}
+                options={{
+                    title: "Viagens",
                     headerStyle: {
                         backgroundColor: '#333',
                     },

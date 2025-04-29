@@ -1,0 +1,220 @@
+import React, { useContext, useState, useEffect } from "react";
+import Icon from 'react-native-vector-icons/Feather';
+import { Picker } from '@react-native-picker/picker';
+import { View, Text, TouchableOpacity, TextInput, ScrollView } from "react-native";
+import { AuthContext } from "../../contexts/AuthContext";
+import { api } from "../../services/api";
+import { styles } from "./styles";
+
+interface Viagem {
+  id: string | number;
+  veiculo_id: string;
+  motorista_id: string;
+  data_viagem: string;
+  km_saida: string;
+  local_saida: string;
+  local_destino: string;
+  hora_chegada: string;
+  km_chegada: string;
+  km_total: string;
+  nota: string;
+  status: string;
+  veiculo?: { id: string | number; placa: string };
+  motorista?: { id: string | number; nome: string };
+}
+
+interface FormData {
+  veiculo_id: string;
+  motorista_id: string;
+  data_viagem: string;
+  km_saida: string;
+  local_saida: string;
+  local_destino: string;
+  hora_chegada: string;
+  km_chegada: string;
+  km_total: string;
+  nota: string;
+  status: string;
+}
+
+export default function ViagemScreen() {
+  const { signOut } = useContext(AuthContext);
+  const [viagens, setViagens] = useState<Viagem[]>([]);
+  const [veiculos, setVeiculos] = useState<any[]>([]);
+  const [motoristas, setMotoristas] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [editingId, setEditingId] = useState<string | number | null>(null);
+
+  const [formData, setFormData] = useState<FormData>({
+    veiculo_id: "",
+    motorista_id: "",
+    data_viagem: "",
+    km_saida: "",
+    local_saida: "",
+    local_destino: "",
+    hora_chegada: "",
+    km_chegada: "",
+    km_total: "",
+    nota: "",
+    status: "Em andamento",
+  });
+
+  const fieldLabels: { [key: string]: string } = {
+    veiculo_id: "Veículo",
+    motorista_id: "Motorista",
+    data_viagem: "Data da Viagem",
+    km_saida: "Km Saída",
+    local_saida: "Local Saída",
+    local_destino: "Destino",
+    hora_chegada: "Hora Chegada",
+    km_chegada: "Km Chegada",
+    km_total: "Km Total",
+    nota: "Nota",
+    status: "Status",
+  };
+
+  async function fetchViagens() {
+    setLoading(true);
+    try {
+      const response = await api.get("/viagem");
+      setViagens(response.data);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleSubmit() {
+    setLoading(true);
+    try {
+      await api.post("/viagem", formData);
+      setFormData({
+        veiculo_id: "",
+        motorista_id: "",
+        data_viagem: "",
+        km_saida: "",
+        local_saida: "",
+        local_destino: "",
+        hora_chegada: "",
+        km_chegada: "",
+        km_total: "",
+        nota: "",
+        status: "Em andamento",
+      });
+      fetchViagens();
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleEditItem() {
+    if (!editingId) return;
+    setLoading(true);
+    try {
+      await api.put(`/viagem/${editingId}`, formData);
+      setEditing(false);
+      setEditingId(null);
+      fetchViagens();
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleDeleteItem(id: string | number) {
+    try {
+      await api.delete(`/viagem/${id}`);
+      setViagens(viagens.filter((v) => v.id !== id));
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async function loadEditItem(id: string | number) {
+    try {
+      const response = await api.get(`/viagem/${id}`);
+      setFormData(response.data);
+      setEditing(true);
+      setEditingId(id);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  useEffect(() => {
+    fetchViagens();
+    api.get("/veiculo").then((res) => setVeiculos(res.data));
+    api.get("/motorista").then((res) => setMotoristas(res.data));
+  }, []);
+
+  return (
+    <ScrollView style={styles.container}>
+      <View style={styles.formContainer}>
+        <Text style={styles.formTitle}>{editing ? "Editar Viagem" : "Nova Viagem"}</Text>
+
+        {Object.keys(fieldLabels).map((field) => (
+          field === "veiculo_id" || field === "motorista_id" ? (
+            <Picker
+              key={field}
+              selectedValue={(formData as any)[field]}
+              onValueChange={(value) => setFormData((prev) => ({ ...prev, [field]: value }))}
+              style={styles.select}
+            >
+              <Picker.Item label={`Selecione ${fieldLabels[field]}`} value="" />
+              {(field === "veiculo_id" ? veiculos : motoristas).map((item) => (
+                <Picker.Item
+                  key={item.id}
+                  label={field === "veiculo_id" ? item.placa : item.nome}
+                  value={item.id}
+                />
+              ))}
+            </Picker>
+          ) : (
+            <TextInput
+              key={field}
+              placeholder={fieldLabels[field]}
+              placeholderTextColor="#7C7C8A"
+              style={styles.input}
+              value={(formData as any)[field]}
+              onChangeText={(text: string) => setFormData((prev) => ({ ...prev, [field]: text }))}
+            />
+          )
+        ))}
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={editing ? handleEditItem : handleSubmit}
+          disabled={loading}
+        >
+          <Text style={styles.buttonText}>{loading ? "Salvando..." : editing ? "Atualizar" : "Salvar"}</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.tableContainer}>
+        <Text style={styles.tableTitle}>Lista de Viagens</Text>
+        {viagens.map((viagem) => (
+          <View key={viagem.id} style={styles.tableRow}>
+            <Text style={styles.tableCell}>#{viagem.id}</Text>
+            <Text style={styles.tableCell}>{viagem.veiculo?.placa || 'Sem Veículo'}</Text>
+            <Text style={styles.tableCell}>{viagem.motorista?.nome || 'Sem Motorista'}</Text>
+            <TouchableOpacity onPress={() => loadEditItem(viagem.id)}>
+              <Icon name="edit" size={16} color="#999" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleDeleteItem(viagem.id)}>
+              <Icon name="trash-2" size={16} color="#999" />
+            </TouchableOpacity>
+          </View>
+        ))}
+
+        <TouchableOpacity style={styles.refreshButton} onPress={fetchViagens} disabled={loading}>
+          <Text style={styles.refreshButtonText}>Atualizar Lista</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
+  );
+}

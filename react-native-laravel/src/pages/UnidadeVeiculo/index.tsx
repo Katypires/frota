@@ -37,7 +37,7 @@ export default function UnidadeVeiculoScreen() {
     const [formData, setFormData] = useState<FormData>({
         unidade_id: "",
         veiculo_id: "",
-        status: "",
+        status: "Ativo", 
     });
 
     async function fetchUnidadeVeiculos() {
@@ -57,6 +57,7 @@ export default function UnidadeVeiculoScreen() {
 
         setLoading(true);
         try {
+            console.log("enviando:", formData);
             await api.post("/unidade_veiculo", formData);
             setFormData({ unidade_id: "", veiculo_id: "", status: "" });
             fetchUnidadeVeiculos();
@@ -144,7 +145,7 @@ export default function UnidadeVeiculoScreen() {
             <View style={styles.formContainer}>
                 <Text style={styles.formTitle}>{editing ? "Editar Unidade Veiculo" : "Adicionar Unidade Veiculo"}</Text>
 
-                {["unidade", "veiculo", "status"].map((field) => (
+                {["unidade_id", "veiculo_id", "status"].map((field) => (
                     field === "status" ? (
                         <TextInput
                             key={field}
@@ -163,13 +164,13 @@ export default function UnidadeVeiculoScreen() {
                             onValueChange={(value) =>
                                 setFormData((prev) => ({ ...prev, [field]: value }))
                             }
-                            style={styles.input}
+                            style={styles.select}
                         >
                             <Picker.Item label={`Selecione o ${field}`} value="" />
-                            {(field === "unidade" ? unidades : veiculos).map((item) => (
+                            {(field === "unidade_id" ? unidades : veiculos).map((item) => (
                                 <Picker.Item
                                     key={item.id}
-                                    label={field === "unidade" ? item.nome : item.placa}
+                                    label={field === "unidade_id" ? item.nome : item.placa}
                                     value={item.id}
                                 />
                             ))}

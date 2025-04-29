@@ -9,7 +9,7 @@ class UnidadeVeiculo extends Model
 {
     use HasFactory;
 
-    protected $table = 'unidade_veiculo';
+    protected $table = 'unidade_veiculos';
 
     protected $fillable = ['unidade_id', 'veiculo_id', 'status'];
 
