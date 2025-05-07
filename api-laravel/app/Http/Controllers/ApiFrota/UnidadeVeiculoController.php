@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\UnidadeVeiculo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Unidade;
-use App\Models\Veiculo;
 
 
 class UnidadeVeiculoController extends Controller

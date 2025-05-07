@@ -5,6 +5,7 @@ import { View, Text, TouchableOpacity, TextInput, ScrollView } from "react-nativ
 import { AuthContext } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
 import { styles } from "./styles";
+import Checkbox from "expo-checkbox";
 
 interface Viagem {
   id: string | number;
@@ -153,7 +154,10 @@ export default function ViagemScreen() {
   }, []);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: 100 }}
+    >
       <View style={styles.formContainer}>
         <Text style={styles.formTitle}>{editing ? "Editar Viagem" : "Nova Viagem"}</Text>
 
@@ -165,7 +169,7 @@ export default function ViagemScreen() {
               onValueChange={(value) => setFormData((prev) => ({ ...prev, [field]: value }))}
               style={styles.select}
             >
-              <Picker.Item label={`Selecione ${fieldLabels[field]}`} value="" />
+              <Picker.Item label={`Selecione um ${fieldLabels[field]}`} value="" />
               {(field === "veiculo_id" ? veiculos : motoristas).map((item) => (
                 <Picker.Item
                   key={item.id}
@@ -174,16 +178,28 @@ export default function ViagemScreen() {
                 />
               ))}
             </Picker>
-          ) : (
-            <TextInput
-              key={field}
-              placeholder={fieldLabels[field]}
-              placeholderTextColor="#7C7C8A"
-              style={styles.input}
-              value={(formData as any)[field]}
-              onChangeText={(text: string) => setFormData((prev) => ({ ...prev, [field]: text }))}
-            />
-          )
+          ) :
+            field === "status" ? (
+              <View key="status" style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
+                <Checkbox
+                  value={formData.status === 'Ativo'}
+                  onValueChange={(newValue) =>
+                    setFormData((prev) => ({ ...prev, status: newValue ? 'Ativo' : 'Inativo' }))
+                  }
+                  color={formData.status === 'Ativo' ? '#34A853' : undefined}
+                />
+                <Text style={{ marginLeft: 10, color: '#000' }}>Status</Text>
+              </View>
+            ) : (
+              <TextInput
+                key={field}
+                placeholder={fieldLabels[field]}
+                placeholderTextColor="#7C7C8A"
+                style={styles.input}
+                value={(formData as any)[field]}
+                onChangeText={(text: string) => setFormData((prev) => ({ ...prev, [field]: text }))}
+              />
+            )
         ))}
 
         <TouchableOpacity
@@ -191,25 +207,34 @@ export default function ViagemScreen() {
           onPress={editing ? handleEditItem : handleSubmit}
           disabled={loading}
         >
-          <Text style={styles.buttonText}>{loading ? "Salvando..." : editing ? "Atualizar" : "Salvar"}</Text>
+          <Text style={styles.buttonText}>
+            {loading ? "Carregando..." : editing ? "Atualizar" : "Salvar"}
+          </Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.tableContainer}>
         <Text style={styles.tableTitle}>Lista de Viagens</Text>
-        {viagens.map((viagem) => (
-          <View key={viagem.id} style={styles.tableRow}>
-            <Text style={styles.tableCell}>#{viagem.id}</Text>
-            <Text style={styles.tableCell}>{viagem.veiculo?.placa || 'Sem Veículo'}</Text>
-            <Text style={styles.tableCell}>{viagem.motorista?.nome || 'Sem Motorista'}</Text>
-            <TouchableOpacity onPress={() => loadEditItem(viagem.id)}>
-              <Icon name="edit" size={16} color="#999" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleDeleteItem(viagem.id)}>
-              <Icon name="trash-2" size={16} color="#999" />
-            </TouchableOpacity>
-          </View>
-        ))}
+        
+        {loading ? (
+          <Text style={styles.loadingText}>Carregando...</Text>
+        ) : viagens.length === 0 ? (
+          <Text style={styles.emptyText}>Nenhum registro</Text>
+        ) : (
+          viagens.map((viagem) => (
+            <View key={viagem.id} style={styles.tableRow}>
+              <Text style={styles.tableCell}>#{viagem.id}</Text>
+              <Text style={styles.tableCell}>{viagem.veiculo?.placa || 'Sem Veículo'}</Text>
+              <Text style={styles.tableCell}>{viagem.motorista?.nome || 'Sem Motorista'}</Text>
+              <TouchableOpacity onPress={() => loadEditItem(viagem.id)}>
+                <Icon name="edit" size={16} color="#999" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleDeleteItem(viagem.id)}>
+                <Icon name="trash-2" size={16} color="#999" />
+              </TouchableOpacity>
+            </View>
+          )
+          ))}
 
         <TouchableOpacity style={styles.refreshButton} onPress={fetchViagens} disabled={loading}>
           <Text style={styles.refreshButtonText}>Atualizar Lista</Text>

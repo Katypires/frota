@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity, TextInput, ScrollView } from "react-nativ
 import { AuthContext } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
 import { styles } from "./styles";
+import Checkbox from 'expo-checkbox';
 
 
 interface Veiculo {
@@ -112,7 +113,10 @@ export default function Veiculo() {
     }, []);
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView
+            style={styles.container}
+            contentContainerStyle={{ paddingBottom: 100 }}
+        >
             {/* <View style={styles.header}>
                 <Text style={styles.headerText}>Gerenciamento de Veiculos</Text>
                 <TouchableOpacity style={styles.logoutButton} onPress={signOut}>
@@ -124,16 +128,29 @@ export default function Veiculo() {
                 <Text style={styles.formTitle}>{editing ? "Editar Veiculo" : "Adicionar Veiculo"}</Text>
 
                 {["nome", "marca", "placa", "status"].map((field) => (
-                    <TextInput
-                        key={field}
-                        placeholder={`Digite o ${field}`}
-                        placeholderTextColor="#7C7C8A"
-                        style={styles.input}
-                        value={(formData as any)[field]}
-                        onChangeText={(text: string) =>
-                            setFormData((prev) => ({ ...prev, [field]: text }))
-                        }
-                    />
+                    field === "status" ? (
+                        <View key="status" style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
+                            <Checkbox
+                                value={formData.status === 'Ativo'}
+                                onValueChange={(newValue) =>
+                                    setFormData((prev) => ({ ...prev, status: newValue ? 'Ativo' : 'Inativo' }))
+                                }
+                                color={formData.status === 'Ativo' ? '#34A853' : undefined}
+                            />
+                            <Text style={{ marginLeft: 10, color: '#000' }}>Status</Text>
+                        </View>
+                    ) : (
+                        <TextInput
+                            key={field}
+                            placeholder={`Digite o ${field}`}
+                            placeholderTextColor="#7C7C8A"
+                            style={styles.input}
+                            value={(formData as any)[field]}
+                            onChangeText={(text: string) =>
+                                setFormData((prev) => ({ ...prev, [field]: text }))
+                            }
+                        />
+                    )
                 ))}
 
                 <TouchableOpacity

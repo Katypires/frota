@@ -1,9 +1,11 @@
 import React, { useContext, useState, useEffect } from "react";
 import Icon from 'react-native-vector-icons/Feather';
+import { Feather } from '@expo/vector-icons';
 import { View, Text, TouchableOpacity, TextInput, ScrollView } from "react-native";
 import { AuthContext } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
 import { styles } from "./styles";
+import Checkbox from "expo-checkbox";
 
 
 interface Unidade {
@@ -104,7 +106,10 @@ export default function Unidade() {
     }, []);
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView
+            style={styles.container}
+            contentContainerStyle={{ paddingBottom: 100 }}
+        >
             {/* <View style={styles.header}>
                 <Text style={styles.headerText}>Gerenciamento de Unidades</Text>
                 <TouchableOpacity style={styles.logoutButton} onPress={signOut}>
@@ -116,16 +121,29 @@ export default function Unidade() {
                 <Text style={styles.formTitle}>{editing ? "Editar Unidade" : "Adicionar Unidade"}</Text>
 
                 {["nome", "status"].map((field) => (
-                    <TextInput
-                        key={field}
-                        placeholder={`Digite o ${field}`}
-                        placeholderTextColor="#7C7C8A"
-                        style={styles.input}
-                        value={(formData as any)[field]}
-                        onChangeText={(text: string) =>
-                            setFormData((prev) => ({ ...prev, [field]: text }))
-                        }
-                    />
+                    field === "status" ? (
+                        <View key="status" style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
+                            <Checkbox
+                                value={formData.status === 'Ativo'}
+                                onValueChange={(newValue) =>
+                                    setFormData((prev) => ({ ...prev, status: newValue ? 'Ativo' : 'Inativo' }))
+                                }
+                                color={formData.status === 'Ativo' ? '#34A853' : undefined}
+                            />
+                            <Text style={{ marginLeft: 10, color: '#000' }}>Status</Text>
+                        </View>
+                    ) : (
+                        < TextInput
+                            key={field}
+                            placeholder={`Digite o ${field}`}
+                            placeholderTextColor="#7C7C8A"
+                            style={styles.input}
+                            value={(formData as any)[field]}
+                            onChangeText={(text: string) =>
+                                setFormData((prev) => ({ ...prev, [field]: text }))
+                            }
+                        />
+                    )
                 ))}
 
                 <TouchableOpacity

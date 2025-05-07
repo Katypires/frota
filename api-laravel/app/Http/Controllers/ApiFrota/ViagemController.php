@@ -9,11 +9,16 @@ use Illuminate\Support\Facades\Validator;
 
 class ViagemController extends Controller
 {
-    public function index() {
-        return response()->json(Viagem::select('id', 'veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'hora_chegada', 'km_chegada', 'km_total', 'nota')->get());
+    public function index(){
+        return response()->json(
+            Viagem::with(['veiculo', 'motorista'])
+                ->select('id', 'veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'hora_chegada', 'km_chegada', 'km_total', 'nota')
+                ->get()
+        );
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'veiculo_id' => 'required|exists:veiculos,id',
             'motorista_id' => 'required|exists:motoristas,id',
@@ -31,12 +36,14 @@ class ViagemController extends Controller
         return response()->json(Viagem::create($request->only(['veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'hora_chegada', 'km_chegada', 'km_total', 'nota'])), 201);
     }
 
-    public function show($id) {
+    public function show($id)
+    {
         $viagem = Viagem::select('id', 'veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'hora_chegada', 'km_chegada', 'km_total', 'nota')->find($id);
         return $viagem ? response()->json($viagem) : response()->json(['error' => 'Viagem não encontrada'], 404);
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         $validator = Validator::make($request->all(), [
             'veiculo_id' => 'required|exists:veiculos,id',
             'motorista_id' => 'required|exists:motoristas,id',
@@ -57,7 +64,8 @@ class ViagemController extends Controller
         return response()->json($viagem);
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $viagem = Viagem::find($id);
         if (!$viagem) return response()->json(['error' => 'Viagem não encontrada'], 404);
         $viagem->delete();

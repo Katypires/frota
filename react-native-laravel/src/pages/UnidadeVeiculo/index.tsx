@@ -5,6 +5,7 @@ import { View, Text, TouchableOpacity, TextInput, ScrollView } from "react-nativ
 import { AuthContext } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
 import { styles } from "./styles";
+import Checkbox from "expo-checkbox";
 
 interface UnidadeVeiculo {
     id: string | number;
@@ -37,7 +38,7 @@ export default function UnidadeVeiculoScreen() {
     const [formData, setFormData] = useState<FormData>({
         unidade_id: "",
         veiculo_id: "",
-        status: "Ativo", 
+        status: "Ativo",
     });
 
     async function fetchUnidadeVeiculos() {
@@ -141,22 +142,25 @@ export default function UnidadeVeiculoScreen() {
 
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView
+            style={styles.container}
+            contentContainerStyle={{ paddingBottom: 100 }}
+        >
             <View style={styles.formContainer}>
                 <Text style={styles.formTitle}>{editing ? "Editar Unidade Veiculo" : "Adicionar Unidade Veiculo"}</Text>
 
                 {["unidade_id", "veiculo_id", "status"].map((field) => (
                     field === "status" ? (
-                        <TextInput
-                            key={field}
-                            placeholder={`Digite o ${field}`}
-                            placeholderTextColor="#7C7C8A"
-                            style={styles.input}
-                            value={(formData as any)[field]}
-                            onChangeText={(text: string) =>
-                                setFormData((prev) => ({ ...prev, [field]: text }))
-                            }
-                        />
+                        <View key="status" style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
+                            <Checkbox
+                                value={formData.status === 'Ativo'}
+                                onValueChange={(newValue) =>
+                                    setFormData((prev) => ({ ...prev, status: newValue ? 'Ativo' : 'Inativo' }))
+                                }
+                                color={formData.status === 'Ativo' ? '#34A853' : undefined}
+                            />
+                            <Text style={{ marginLeft: 10, color: '#000' }}>Status</Text>
+                        </View>
                     ) : (
                         <Picker
                             key={field}
@@ -166,7 +170,7 @@ export default function UnidadeVeiculoScreen() {
                             }
                             style={styles.select}
                         >
-                            <Picker.Item label={`Selecione o ${field}`} value="" />
+                            <Picker.Item label={`Selecione um ${field}`} value="" />
                             {(field === "unidade_id" ? unidades : veiculos).map((item) => (
                                 <Picker.Item
                                     key={item.id}
@@ -199,7 +203,9 @@ export default function UnidadeVeiculoScreen() {
                     <Text style={[styles.tableHeaderText, styles.actionColumn]}>Ações</Text>
                 </View>
 
-                <ScrollView style={styles.tableContent}>
+                <ScrollView 
+                style={styles.tableContent}
+                >
                     {loading ? (
                         <Text style={styles.loadingText}>Carregando...</Text>
                     ) : unidadeVeiculos.length === 0 ? (
