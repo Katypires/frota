@@ -12,6 +12,7 @@ interface Viagem {
   veiculo_id: string;
   motorista_id: string;
   data_viagem: string;
+  data_saida: string;
   km_saida: string;
   local_saida: string;
   local_destino: string;
@@ -28,6 +29,7 @@ interface FormData {
   veiculo_id: string;
   motorista_id: string;
   data_viagem: string;
+  data_saida: string;
   km_saida: string;
   local_saida: string;
   local_destino: string;
@@ -51,6 +53,7 @@ export default function ViagemScreen() {
     veiculo_id: "",
     motorista_id: "",
     data_viagem: "",
+    data_saida: "",
     km_saida: "",
     local_saida: "",
     local_destino: "",
@@ -65,6 +68,7 @@ export default function ViagemScreen() {
     veiculo_id: "Veículo",
     motorista_id: "Motorista",
     data_viagem: "Data da Viagem",
+    data_saida: "Data da Saida",
     km_saida: "Km Saída",
     local_saida: "Local Saída",
     local_destino: "Destino",
@@ -95,6 +99,7 @@ export default function ViagemScreen() {
         veiculo_id: "",
         motorista_id: "",
         data_viagem: "",
+        data_saida: "",
         km_saida: "",
         local_saida: "",
         local_destino: "",
@@ -105,11 +110,14 @@ export default function ViagemScreen() {
         status: "Em andamento",
       });
       fetchViagens();
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setLoading(false);
+    } catch (e: any) {
+      if (e.response && e.response.data) {
+        console.log('Erro detalhado:', JSON.stringify(e.response.data, null, 2));
+      } else {
+        console.log('Erro inesperado:', e.message || e);
+      }
     }
+    
   }
 
   async function handleEditItem() {
@@ -222,10 +230,10 @@ export default function ViagemScreen() {
           <Text style={styles.emptyText}>Nenhum registro</Text>
         ) : (
           viagens.map((viagem) => (
-            <View key={viagem.id} style={styles.tableRow}>
-              <Text style={styles.tableCell}>#{viagem.id}</Text>
-              <Text style={styles.tableCell}>{viagem.veiculo?.placa || 'Sem Veículo'}</Text>
-              <Text style={styles.tableCell}>{viagem.motorista?.nome || 'Sem Motorista'}</Text>
+            <View key={viagem.id} style={styles.tableHeader}>
+              <Text style={[styles.tableHeaderText, styles.idColumn]}>#{viagem.id}</Text>
+              <Text style={[styles.tableHeaderText, styles.placaColumn]}>Placa: {viagem.veiculo?.placa || 'Sem Veículo'}</Text>
+              <Text style={[styles.tableHeaderText, styles.nameColumn]}>Nome: {viagem.motorista?.nome || 'Sem Motorista'}</Text>
               <TouchableOpacity onPress={() => loadEditItem(viagem.id)}>
                 <Icon name="edit" size={16} color="#999" />
               </TouchableOpacity>

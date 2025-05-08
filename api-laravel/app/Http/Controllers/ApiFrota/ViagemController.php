@@ -23,16 +23,21 @@ class ViagemController extends Controller
             'veiculo_id' => 'required|exists:veiculos,id',
             'motorista_id' => 'required|exists:motoristas,id',
             'data_viagem' => 'required|date',
-            'data_saida' => 'required|date',
+            'data_saida' => 'required|date_format:Y-m-d H:i',
             'km_saida' => 'required|integer',
             'local_saida' => 'required|string',
             'local_destino' => 'required|string',
-            'hora_chegada' => 'required|date',
+            'hora_chegada' => 'required|date_format:Y-m-d H:i',
             'km_chegada' => 'required|integer',
             'km_total' => 'required|integer',
             'nota' => 'nullable|string'
         ]);
-        if ($validator->fails()) return response()->json(['error' => 'Dados inválidos'], 400);
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 'Dados inválidos',
+                'mensagens' => $validator->errors()
+            ], 400);
+        }
         return response()->json(Viagem::create($request->only(['veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'hora_chegada', 'km_chegada', 'km_total', 'nota'])), 201);
     }
 
@@ -48,11 +53,11 @@ class ViagemController extends Controller
             'veiculo_id' => 'required|exists:veiculos,id',
             'motorista_id' => 'required|exists:motoristas,id',
             'data_viagem' => 'required|date',
-            'data_saida' => 'required|date',
+            'data_saida' => 'date_format:Y-m-d H:i',
             'km_saida' => 'required|integer',
             'local_saida' => 'required|string',
             'local_destino' => 'required|string',
-            'hora_chegada' => 'required|date',
+            'hora_chegada' => 'date_format:Y-m-d H:i',
             'km_chegada' => 'required|integer',
             'km_total' => 'required|integer',
             'nota' => 'nullable|string'
