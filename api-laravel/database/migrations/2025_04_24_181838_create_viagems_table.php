@@ -24,6 +24,7 @@ return new class extends Migration
             $table->integer('km_chegada');
             $table->integer('km_total');
             $table->text('nota')->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

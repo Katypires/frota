@@ -12,7 +12,7 @@ class ViagemController extends Controller
     public function index(){
         return response()->json(
             Viagem::with(['veiculo', 'motorista'])
-                ->select('id', 'veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'hora_chegada', 'km_chegada', 'km_total', 'nota')
+                ->select('id', 'veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'hora_chegada', 'km_chegada', 'km_total', 'nota', 'status')
                 ->get()
         );
     }
@@ -30,7 +30,8 @@ class ViagemController extends Controller
             'hora_chegada' => 'required|date_format:Y-m-d H:i',
             'km_chegada' => 'required|integer',
             'km_total' => 'required|integer',
-            'nota' => 'nullable|string'
+            'nota' => 'nullable|string',
+            'status' => 'nullable|string'
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -38,12 +39,12 @@ class ViagemController extends Controller
                 'mensagens' => $validator->errors()
             ], 400);
         }
-        return response()->json(Viagem::create($request->only(['veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'hora_chegada', 'km_chegada', 'km_total', 'nota'])), 201);
+        return response()->json(Viagem::create($request->only(['veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'hora_chegada', 'km_chegada', 'km_total', 'nota', 'status'])), 201);
     }
 
     public function show($id)
     {
-        $viagem = Viagem::select('id', 'veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'hora_chegada', 'km_chegada', 'km_total', 'nota')->find($id);
+        $viagem = Viagem::select('id', 'veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'hora_chegada', 'km_chegada', 'km_total', 'nota', 'status')->find($id);
         return $viagem ? response()->json($viagem) : response()->json(['error' => 'Viagem não encontrada'], 404);
     }
 
@@ -60,12 +61,13 @@ class ViagemController extends Controller
             'hora_chegada' => 'date_format:Y-m-d H:i',
             'km_chegada' => 'required|integer',
             'km_total' => 'required|integer',
-            'nota' => 'nullable|string'
+            'nota' => 'nullable|string',
+            'status' => 'nullable|string'
         ]);
         if ($validator->fails()) return response()->json(['error' => 'Dados inválidos'], 400);
         $viagem = Viagem::find($id);
         if (!$viagem) return response()->json(['error' => 'Viagem não encontrada'], 404);
-        $viagem->update($request->only(['veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'hora_chegada', 'km_chegada', 'km_total', 'nota']));
+        $viagem->update($request->only(['veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'hora_chegada', 'km_chegada', 'km_total', 'nota', 'status']));
         return response()->json($viagem);
     }
 

@@ -61,7 +61,7 @@ export default function ViagemScreen() {
     km_chegada: "",
     km_total: "",
     nota: "",
-    status: "Em andamento",
+    status: "Ativo",
   });
 
   const fieldLabels: { [key: string]: string } = {
@@ -94,6 +94,7 @@ export default function ViagemScreen() {
   async function handleSubmit() {
     setLoading(true);
     try {
+      console.log("Enviando dados:", formData);
       await api.post("/viagem", formData);
       setFormData({
         veiculo_id: "",
@@ -107,7 +108,7 @@ export default function ViagemScreen() {
         km_chegada: "",
         km_total: "",
         nota: "",
-        status: "Em andamento",
+        status: "",
       });
       fetchViagens();
     } catch (e: any) {
@@ -117,7 +118,7 @@ export default function ViagemScreen() {
         console.log('Erro inesperado:', e.message || e);
       }
     }
-    
+
   }
 
   async function handleEditItem() {
@@ -125,6 +126,10 @@ export default function ViagemScreen() {
     setLoading(true);
     try {
       await api.put(`/viagem/${editingId}`, formData);
+      setFormData({
+        veiculo_id: "", motorista_id: "", data_viagem: "", data_saida: "", km_saida: "", local_saida: "", 
+        local_destino: "", hora_chegada: "", km_chegada: "", km_total: "", nota: "", status: ""
+      });
       setEditing(false);
       setEditingId(null);
       fetchViagens();
@@ -170,11 +175,25 @@ export default function ViagemScreen() {
         <Text style={styles.formTitle}>{editing ? "Editar Viagem" : "Nova Viagem"}</Text>
 
         {Object.keys(fieldLabels).map((field) => (
+          field === "status" ? (
+            <View key="status" style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
+              <Checkbox
+                value={formData.status === 'Ativo'}
+                onValueChange={(newValue) =>
+                  setFormData((prev) => ({ ...prev, status: newValue ? 'Ativo' : 'Inativo' }))
+                }
+                color={formData.status === 'Ativo' ? '#34A853' : undefined}
+              />
+              <Text style={{ marginLeft: 10, color: '#000' }}>Status</Text>
+            </View>
+          ) : (
           field === "veiculo_id" || field === "motorista_id" ? (
             <Picker
               key={field}
               selectedValue={(formData as any)[field]}
-              onValueChange={(value) => setFormData((prev) => ({ ...prev, [field]: value }))}
+              onValueChange={(value) => 
+                setFormData((prev) => ({ ...prev, [field]: value }))
+              }
               style={styles.select}
             >
               <Picker.Item label={`Selecione um ${fieldLabels[field]}`} value="" />
@@ -187,18 +206,6 @@ export default function ViagemScreen() {
               ))}
             </Picker>
           ) :
-            field === "status" ? (
-              <View key="status" style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
-                <Checkbox
-                  value={formData.status === 'Ativo'}
-                  onValueChange={(newValue) =>
-                    setFormData((prev) => ({ ...prev, status: newValue ? 'Ativo' : 'Inativo' }))
-                  }
-                  color={formData.status === 'Ativo' ? '#34A853' : undefined}
-                />
-                <Text style={{ marginLeft: 10, color: '#000' }}>Status</Text>
-              </View>
-            ) : (
               <TextInput
                 key={field}
                 placeholder={fieldLabels[field]}
@@ -216,33 +223,51 @@ export default function ViagemScreen() {
           disabled={loading}
         >
           <Text style={styles.buttonText}>
-            {loading ? "Carregando..." : editing ? "Atualizar" : "Salvar"}
+            {loading ? "Carregando..." : editing ? "Editar" : "Salvar"}
           </Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.tableContainer}>
         <Text style={styles.tableTitle}>Lista de Viagens</Text>
-        
-        {loading ? (
-          <Text style={styles.loadingText}>Carregando...</Text>
-        ) : viagens.length === 0 ? (
-          <Text style={styles.emptyText}>Nenhum registro</Text>
-        ) : (
-          viagens.map((viagem) => (
-            <View key={viagem.id} style={styles.tableHeader}>
-              <Text style={[styles.tableHeaderText, styles.idColumn]}>#{viagem.id}</Text>
-              <Text style={[styles.tableHeaderText, styles.placaColumn]}>Placa: {viagem.veiculo?.placa || 'Sem Veículo'}</Text>
-              <Text style={[styles.tableHeaderText, styles.nameColumn]}>Nome: {viagem.motorista?.nome || 'Sem Motorista'}</Text>
-              <TouchableOpacity onPress={() => loadEditItem(viagem.id)}>
-                <Icon name="edit" size={16} color="#999" />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleDeleteItem(viagem.id)}>
-                <Icon name="trash-2" size={16} color="#999" />
-              </TouchableOpacity>
-            </View>
-          )
-          ))}
+
+        <View style={styles.tableHeader}>
+          <Text style={[styles.tableHeaderText, styles.idColumn]}>ID</Text>
+          <Text style={[styles.tableHeaderText, styles.nameColumn]}>Placa</Text>
+          <Text style={[styles.tableHeaderText, styles.placaColumn]}>Nome</Text>
+          <Text style={[styles.tableHeaderText, styles.actionColumn]}>Ações</Text>
+        </View>
+
+        <View
+          style={styles.tableContent}
+        >
+          {loading ? (
+            <Text style={styles.loadingText}>Carregando...</Text>
+          ) : viagens.length === 0 ? (
+            <Text style={styles.emptyText}>Nenhum registro</Text>
+          ) : (
+            viagens.map((item) => (
+              <View key={item.id} style={styles.tableRow}>
+                <Text style={[styles.tableCell, styles.idColumn]}>
+                  {item.id}</Text>
+                <Text style={[styles.tableCell, styles.placaColumn]}>
+                  {item.veiculo?.placa || 'Sem Veículo'}
+                </Text>
+                <Text style={[styles.tableCell, styles.nameColumn]}>
+                  {item.motorista?.nome || 'Sem Motorista'}
+                </Text>
+                <View style={[styles.actionColumn, styles.actionButtons]}>
+                  <TouchableOpacity style={styles.editButton} onPress={() => loadEditItem(item.id)}>
+                    <Icon name="edit" size={16} color="#999" />
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteItem(item.id)}>
+                    <Icon name="trash-2" size={16} color="#999" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))
+          )}
+        </View>
 
         <TouchableOpacity style={styles.refreshButton} onPress={fetchViagens} disabled={loading}>
           <Text style={styles.refreshButtonText}>Atualizar Lista</Text>
