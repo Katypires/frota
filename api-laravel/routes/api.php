@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ItemController;
 use App\Http\Controllers\ApiFrota\AbastecimentoController;
+use App\Http\Controllers\ApiFrota\FinalizarViagemController;
 use App\Http\Controllers\ApiFrota\ManutencaoController;
 use App\Http\Controllers\ApiFrota\MotoristaController;
 use App\Http\Controllers\ApiFrota\TrocaOleoController;
@@ -38,4 +39,5 @@ Route::resources([
     'viagem' => ViagemController::class,
     'unidade' => UnidadeController::class,
     'unidade_veiculo' => UnidadeVeiculoController::class,
+    'finalizar_viagem' => FinalizarViagemController::class,
 ]);

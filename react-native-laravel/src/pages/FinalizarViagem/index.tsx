@@ -11,11 +11,11 @@ interface Viagem {
   id: string | number;
   veiculo_id: string;
   motorista_id: string;
-  data_viagem: string;
-  data_saida: string;
-  km_saida: string;
-  local_saida: string;
-  local_destino: string;
+  hora_chegada: string;
+  local_chegada: string;
+  km_chegada: string;
+  km_total: string;
+  nivel_combustivel: string;
   nota: string;
   status: string;
   veiculo?: { id: string | number; placa: string };
@@ -25,11 +25,11 @@ interface Viagem {
 interface FormData {
   veiculo_id: string;
   motorista_id: string;
-  data_viagem: string;
-  data_saida: string;
-  km_saida: string;
-  local_saida: string;
-  local_destino: string;
+  hora_chegada: string;
+  local_chegada: string;
+  km_chegada: string;
+  km_total: string;
+  nivel_combustivel: string;
   nota: string;
   status: string;
 }
@@ -46,11 +46,11 @@ export default function ViagemScreen() {
   const [formData, setFormData] = useState<FormData>({
     veiculo_id: "",
     motorista_id: "",
-    data_viagem: "",
-    data_saida: "",
-    km_saida: "",
-    local_saida: "",
-    local_destino: "",
+    hora_chegada: "",
+    local_chegada: "",
+    km_chegada: "",
+    km_total: "",
+    nivel_combustivel: "",
     nota: "",
     status: "Ativo",
   });
@@ -58,11 +58,11 @@ export default function ViagemScreen() {
   const fieldLabels: { [key: string]: string } = {
     veiculo_id: "Veículo",
     motorista_id: "Motorista",
-    data_viagem: "Data da Viagem",
-    data_saida: "Data da Saida",
-    km_saida: "Km Saída",
-    local_saida: "Local Saída",
-    local_destino: "Destino",
+    hora_chegada: "Hora Chegada",
+    local_chegada: "Local Chegada",
+    km_chegada: "Km Chegada",
+    km_total: "Km Total",
+    nivel_combustivel: "Nivel Combustivel",
     nota: "Nota",
     status: "Status",
   };
@@ -70,7 +70,7 @@ export default function ViagemScreen() {
   async function fetchViagens() {
     setLoading(true);
     try {
-      const response = await api.get("/viagem");
+      const response = await api.get("/finalizar_viagem");
       setViagens(response.data);
     } catch (e) {
       console.log(e);
@@ -83,15 +83,15 @@ export default function ViagemScreen() {
     setLoading(true);
     try {
       console.log("Enviando dados:", formData);
-      await api.post("/viagem", formData);
+      await api.post("/finalizar_viagem", formData);
       setFormData({
         veiculo_id: "",
         motorista_id: "",
-        data_viagem: "",
-        data_saida: "",
-        km_saida: "",
-        local_saida: "",
-        local_destino: "",
+        hora_chegada: "",
+        local_chegada: "",
+        km_chegada: "",
+        km_total: "",
+        nivel_combustivel: "",
         nota: "",
         status: "",
       });
@@ -110,10 +110,9 @@ export default function ViagemScreen() {
     if (!editingId) return;
     setLoading(true);
     try {
-      await api.put(`/viagem/${editingId}`, formData);
+      await api.put(`/finalizar_viagem/${editingId}`, formData);
       setFormData({
-        veiculo_id: "", motorista_id: "", data_viagem: "", data_saida: "", km_saida: "", local_saida: "", 
-        local_destino: "", nota: "", status: ""
+        veiculo_id: "", motorista_id: "", hora_chegada: "" , local_chegada: "", km_chegada: "", km_total: "", nivel_combustivel: "", nota: "", status: ""
       });
       setEditing(false);
       setEditingId(null);
@@ -127,7 +126,7 @@ export default function ViagemScreen() {
 
   async function handleDeleteItem(id: string | number) {
     try {
-      await api.delete(`/viagem/${id}`);
+      await api.delete(`/finalizar_viagem/${id}`);
       setViagens(viagens.filter((v) => v.id !== id));
     } catch (e) {
       console.log(e);
@@ -136,7 +135,7 @@ export default function ViagemScreen() {
 
   async function loadEditItem(id: string | number) {
     try {
-      const response = await api.get(`/viagem/${id}`);
+      const response = await api.get(`/finalizar_viagem/${id}`);
       setFormData(response.data);
       setEditing(true);
       setEditingId(id);
@@ -218,8 +217,8 @@ export default function ViagemScreen() {
 
         <View style={styles.tableHeader}>
           <Text style={[styles.tableHeaderText, styles.idColumn]}>ID</Text>
-          <Text style={[styles.tableHeaderText, styles.nameColumn]}>Placa</Text>
-          <Text style={[styles.tableHeaderText, styles.placaColumn]}>Nome</Text>
+          <Text style={[styles.tableHeaderText, styles.nameColumn]}>Nome</Text>
+          <Text style={[styles.tableHeaderText, styles.placaColumn]}>Placa</Text>
           <Text style={[styles.tableHeaderText, styles.actionColumn]}>Ações</Text>
         </View>
 

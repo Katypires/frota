@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('viagems', function (Blueprint $table) {
+        Schema::create('finalizar_viagems', function (Blueprint $table) {
             $table->id();
             $table->foreignId('veiculo_id')->constrained()->onDelete('cascade');
             $table->foreignId('motorista_id')->constrained()->onDelete('cascade');
-            $table->date('data_viagem');
-            $table->dateTime('data_saida');
-            $table->integer('km_saida');
-            $table->string('local_saida');
-            $table->string('local_destino');
+            $table->dateTime('hora_chegada');
+            $table->string('local_chegada');
+            $table->integer('km_chegada');
+            $table->integer('km_total');
+            $table->integer('nivel_combustivel');
             $table->text('nota')->nullable();
             $table->string('status')->nullable();
             $table->timestamps();
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('viagems');
+        Schema::dropIfExists('finalizar_viagems');
     }
 };

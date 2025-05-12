@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\ApiFrota;
 
 use App\Http\Controllers\Controller;
-use App\Models\Viagem;
+use App\Models\FinalizarViagem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ViagemController extends Controller
+class FinalizarViagemController extends Controller
 {
     public function index(){
         return response()->json(
-            Viagem::with(['veiculo', 'motorista'])
-                ->select('id', 'veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'nota', 'status')
+            FinalizarViagem::with(['veiculo', 'motorista'])
+                ->select('id', 'veiculo_id', 'motorista_id', 'hora_chegada', 'local_chegada', 'km_chegada', 'km_total', 'nivel_combustivel', 'nota', 'status')
                 ->get()
         );
     }
@@ -22,11 +22,11 @@ class ViagemController extends Controller
         $validator = Validator::make($request->all(), [
             'veiculo_id' => 'required|exists:veiculos,id',
             'motorista_id' => 'required|exists:motoristas,id',
-            'data_viagem' => 'required|date',
-            'data_saida' => 'required|date_format:Y-m-d H:i',
-            'km_saida' => 'required|integer',
-            'local_saida' => 'required|string',
-            'local_destino' => 'required|string',
+            'hora_chegada' => 'required|date_format:Y-m-d H:i',
+            'local_chegada' => 'required|string',
+            'km_chegada' => 'required|integer',
+            'km_total' => 'required|integer',
+            'nivel_combustivel' => 'required|integer',
             'nota' => 'nullable|string',
             'status' => 'nullable|string'
         ]);
@@ -36,12 +36,12 @@ class ViagemController extends Controller
                 'mensagens' => $validator->errors()
             ], 400);
         }
-        return response()->json(Viagem::create($request->only(['veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'nota', 'status'])), 201);
+        return response()->json(FinalizarViagem::create($request->only(['id', 'veiculo_id', 'motorista_id', 'hora_chegada', 'local_chegada', 'km_chegada', 'km_total', 'nivel_combustivel', 'nota', 'status'])), 201);
     }
 
     public function show($id)
     {
-        $viagem = Viagem::select('id', 'veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'nota', 'status')->find($id);
+        $viagem = FinalizarViagem::select('id', 'veiculo_id', 'motorista_id', 'hora_chegada', 'local_chegada', 'km_chegada', 'km_total', 'nivel_combustivel', 'nota', 'status')->find($id);
         return $viagem ? response()->json($viagem) : response()->json(['error' => 'Viagem não encontrada'], 404);
     }
 
@@ -50,24 +50,24 @@ class ViagemController extends Controller
         $validator = Validator::make($request->all(), [
             'veiculo_id' => 'required|exists:veiculos,id',
             'motorista_id' => 'required|exists:motoristas,id',
-            'data_viagem' => 'required|date',
-            'data_saida' => 'date_format:Y-m-d H:i',
-            'km_saida' => 'required|integer',
-            'local_saida' => 'required|string',
-            'local_destino' => 'required|string',
+            'hora_chegada' => 'required|date_format:Y-m-d H:i',
+            'local_chegada' => 'required|string',
+            'km_chegada' => 'required|integer',
+            'km_total' => 'required|integer',
+            'nivel_combustivel' => 'required|integer',
             'nota' => 'nullable|string',
             'status' => 'nullable|string'
         ]);
         if ($validator->fails()) return response()->json(['error' => 'Dados inválidos'], 400);
-        $viagem = Viagem::find($id);
+        $viagem = FinalizarViagem::find($id);
         if (!$viagem) return response()->json(['error' => 'Viagem não encontrada'], 404);
-        $viagem->update($request->only(['veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'nota', 'status']));
+        $viagem->update($request->only(['id', 'veiculo_id', 'motorista_id', 'hora_chegada', 'local_chegada', 'km_chegada', 'km_total', 'nivel_combustivel', 'nota', 'status']));
         return response()->json($viagem);
     }
 
     public function destroy($id)
     {
-        $viagem = Viagem::find($id);
+        $viagem = FinalizarViagem::find($id);
         if (!$viagem) return response()->json(['error' => 'Viagem não encontrada'], 404);
         $viagem->delete();
         return response()->json(['success' => true]);

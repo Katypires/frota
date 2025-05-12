@@ -168,7 +168,7 @@ export default function Veiculo() {
                 <View style={styles.tableHeader}>
                     <Text style={[styles.tableHeaderText, styles.idColumn]}>ID</Text>
                     <Text style={[styles.tableHeaderText, styles.nameColumn]}>Nome</Text>
-                    <Text style={[styles.tableHeaderText, styles.placaColumn]}>Matrícula</Text>
+                    <Text style={[styles.tableHeaderText, styles.placaColumn]}>Placa</Text>
                     <Text style={[styles.tableHeaderText, styles.actionColumn]}>Ações</Text>
                 </View>
 

@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from "../../contexts/AuthContext";
-import { styles } from "./styles"; // você vai criar um styles separado para o Home
+import { styles } from "./styles";  
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from 'react-native';
 
@@ -18,6 +18,7 @@ export default function Home() {
         { title: "Veiculos", icon: "truck", route: "Veiculo" },
         { title: "Unidade Veiculos", icon: "grid", route: "UnidadeVeiculo" },
         { title: "Viagem", icon: "map", route: "Viagem" },
+        { title: "Finalizar Viagem", icon: "check-circle", route: "FinalizarViagem" },
         // { title: "Relatórios", icon: "file-text", route: "Relatorio" },
     ];
 
