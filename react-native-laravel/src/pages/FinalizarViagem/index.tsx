@@ -234,11 +234,11 @@ export default function ViagemScreen() {
               <View key={item.id} style={styles.tableRow}>
                 <Text style={[styles.tableCell, styles.idColumn]}>
                   {item.id}</Text>
-                <Text style={[styles.tableCell, styles.placaColumn]}>
-                  {item.veiculo?.placa || 'Sem Veículo'}
-                </Text>
                 <Text style={[styles.tableCell, styles.nameColumn]}>
                   {item.motorista?.nome || 'Sem Motorista'}
+                </Text>
+                <Text style={[styles.tableCell, styles.placaColumn]}>
+                  {item.veiculo?.placa || 'Sem Veículo'}
                 </Text>
                 <View style={[styles.actionColumn, styles.actionButtons]}>
                   <TouchableOpacity style={styles.editButton} onPress={() => loadEditItem(item.id)}>

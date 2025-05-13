@@ -19,6 +19,7 @@ export default function Home() {
         { title: "Unidade Veiculos", icon: "grid", route: "UnidadeVeiculo" },
         { title: "Viagem", icon: "map", route: "Viagem" },
         { title: "Finalizar Viagem", icon: "check-circle", route: "FinalizarViagem" },
+        { title: "Câmera", icon: "check-circle", route: "Camera" },
         // { title: "Relatórios", icon: "file-text", route: "Relatorio" },
     ];
 

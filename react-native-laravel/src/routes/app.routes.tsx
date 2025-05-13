@@ -7,6 +7,7 @@ import Veiculo from "../pages/Veiculo";
 import UnidadeVeiculo from "../pages/UnidadeVeiculo";
 import Viagem from "../pages/Viagem";
 import FinalizarViagem from "../pages/FinalizarViagem";
+import Camera from "../pages/camera";
 
 const Stack = createNativeStackNavigator();
 
@@ -82,6 +83,17 @@ function AppRoutes() {
                 component={FinalizarViagem}
                 options={{
                     title: "Finalizar Viagem",
+                    headerStyle: {
+                        backgroundColor: '#333',
+                    },
+                    headerTintColor: '#FFF',
+                }}
+            />
+            <Stack.Screen
+                name="Camera"
+                component={Camera}
+                options={{
+                    title: "Câmera",
                     headerStyle: {
                         backgroundColor: '#333',
                     },
