@@ -4,9 +4,9 @@ export const styles = StyleSheet.create({
     container: {
         flex: 1
     },
-    camera: {
+    cameraView: {
         height: 400,
-
+        justifyContent: "flex-end",
     },
     title: {
         fontSize: 24,
@@ -15,12 +15,10 @@ export const styles = StyleSheet.create({
         marginTop: 32,
     },
     button: {
-        backgroundColor: "#000",
         padding: 16,
-        width: 200,
-        margin: 10,
         borderRadius: 8,
         alignSelf: "center",
+        alignItems: "center",
     },
     buttonText: {
         color: "#fff",
@@ -45,7 +43,26 @@ export const styles = StyleSheet.create({
         margin: 10,
     },
     photo: {
-        width: 150,
-        height: 150
+        width: 100,
+        height: 100,
+        margin: 5,
+        borderRadius: 8,
+        alignSelf: "baseline",
     },
+
+    takePhoto: {
+        width: 80,
+        height: 80,
+        backgroundColor: "#333",
+        borderRadius: 50,
+        alignSelf: "center",
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 10,
+        borderWidth: 2,
+        position: 'absolute',
+        bottom: 10,
+
+    },
+   
 });
