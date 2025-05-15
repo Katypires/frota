@@ -51,7 +51,7 @@ class ViagemController extends Controller
             'veiculo_id' => 'required|exists:veiculos,id',
             'motorista_id' => 'required|exists:motoristas,id',
             'data_viagem' => 'required|date',
-            'data_saida' => 'date_format:Y-m-d H:i',
+            //'data_saida' => 'date_format:Y-m-d H:i',
             'km_saida' => 'required|integer',
             'local_saida' => 'required|string',
             'local_destino' => 'required|string',

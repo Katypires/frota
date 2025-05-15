@@ -16,11 +16,10 @@ export default function GerarQRCode() {
     const [qrData, setQrData] = useState("");
 
     const gerarQRCode = () => {
-        // Verifica se todos os campos estão preenchidos
         if (Object.values(viaturaInfo).every((field) => field.trim() !== "")) {
-            setQrData(JSON.stringify(viaturaInfo)); // Converte as informações para JSON
+            setQrData(JSON.stringify(viaturaInfo)); 
         } else {
-            setQrData(""); // Caso algum campo esteja vazio, não gera o QR Code
+            setQrData("");
         }
     };
 
