@@ -125,6 +125,10 @@ export const styles = StyleSheet.create({
         flex: 1.5,
         textAlign: "center",
     },
+    modeloColumn: {
+        flex: 1.5,
+        textAlign: "center",
+    },
     statusColumn: {
         flex: 1,
     },

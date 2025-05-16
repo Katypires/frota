@@ -12,6 +12,7 @@ interface Veiculo {
     nome: string;
     marca: string;
     placa: string;
+    modelo: string;
     status: string;
 }
 
@@ -19,6 +20,7 @@ interface FormData {
     nome: string;
     marca: string;
     placa: string;
+    modelo: string;
     status: string;
 }
 
@@ -33,6 +35,7 @@ export default function Veiculo() {
         nome: "",
         marca: "",
         placa: "",
+        modelo: "",
         status: "",
     });
 
@@ -49,12 +52,12 @@ export default function Veiculo() {
     }
 
     async function handleSubmit() {
-        if (!formData.nome || !formData.marca || !formData.placa || !formData.status) return;
+        if (!formData.nome || !formData.marca || !formData.placa || !formData.modelo || !formData.status) return;
 
         setLoading(true);
         try {
             const response = await api.post("/veiculo", formData);
-            setFormData({ nome: "", marca: "", placa: "", status: "" });
+            setFormData({ nome: "", marca: "", placa: "", modelo: "", status: "" });
             fetchVeiculos();
         } catch (e) {
             console.log(e);
@@ -69,7 +72,7 @@ export default function Veiculo() {
         setLoading(true);
         try {
             await api.put(`/veiculo/${editingId}`, formData);
-            setFormData({ nome: "", marca: "", placa: "", status: "" });
+            setFormData({ nome: "", marca: "", placa: "", modelo: "", status: "" });
             setEditing(false);
             setEditingId(null);
             fetchVeiculos();
@@ -98,6 +101,7 @@ export default function Veiculo() {
                 nome: data.nome,
                 marca: data.marca,
                 placa: data.placa,
+                modelo: data.modelo,
                 status: data.status,
             });
 
@@ -127,7 +131,7 @@ export default function Veiculo() {
             <View style={styles.formContainer}>
                 <Text style={styles.formTitle}>{editing ? "Editar Veiculo" : "Adicionar Veiculo"}</Text>
 
-                {["nome", "marca", "placa", "status"].map((field) => (
+                {["nome", "marca", "placa", "modelo", "status"].map((field) => (
                     field === "status" ? (
                         <View key="status" style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
                             <Checkbox
@@ -169,6 +173,7 @@ export default function Veiculo() {
                     <Text style={[styles.tableHeaderText, styles.idColumn]}>ID</Text>
                     <Text style={[styles.tableHeaderText, styles.nameColumn]}>Nome</Text>
                     <Text style={[styles.tableHeaderText, styles.placaColumn]}>Placa</Text>
+                    <Text style={[styles.tableHeaderText, styles.modeloColumn]}>Modelo</Text>
                     <Text style={[styles.tableHeaderText, styles.actionColumn]}>Ações</Text>
                 </View>
 
@@ -183,6 +188,7 @@ export default function Veiculo() {
                                 <Text style={[styles.tableCell, styles.idColumn]}>{veiculo.id}</Text>
                                 <Text style={[styles.tableCell, styles.nameColumn]}>{veiculo.nome}</Text>
                                 <Text style={[styles.tableCell, styles.placaColumn]}>{veiculo.placa}</Text>
+                                <Text style={[styles.tableCell, styles.modeloColumn]}>{veiculo.modelo}</Text>
                                 <View style={[styles.actionColumn, styles.actionButtons]}>
                                     <TouchableOpacity style={styles.editButton} onPress={() => loadEditItem(veiculo.id)}>
                                         <Icon name="edit" size={16} color="#999" />

@@ -1,93 +1,109 @@
-import React, { useState } from "react";
-import { View, Text, Button, StyleSheet, TouchableOpacity, ScrollView} from "react-native";
-import QRCode from "react-native-qrcode-svg";
-import { TextInput } from 'react-native-paper';
-import { styles } from "./styles";
+import React, { useEffect, useState } from 'react';
+import { View, Text, Button, ActivityIndicator, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import QRCode from 'react-native-qrcode-svg';
+import { Picker } from '@react-native-picker/picker';
+import { styles } from './styles';
+import axios from 'axios';
 
-export default function GerarQRCode() {
-    const [viaturaInfo, setViaturaInfo] = useState({
-        numero: "",
-        placa: "",
-        modelo: "",
-        equipe: "",
-        status: "",
-    });
+const API_URL = 'http://10.8.2.140:8000/api';
 
-    const [qrData, setQrData] = useState("");
+export default function GerarQrCode() {
+  const [placas, setPlacas] = useState([]);
+  const [veiculoSelecionado, setVeiculoSelecionado] = useState(null);
+  const [veiculoDetalhes, setVeiculoDetalhes] = useState(null);
+  const [mostrarQrCode, setMostrarQrCode] = useState(false);
+  const [carregando, setCarregando] = useState(false);
+  const [loadingPlacas, setLoadingPlacas] = useState(true);
 
-    const gerarQRCode = () => {
-        if (Object.values(viaturaInfo).every((field) => field.trim() !== "")) {
-            setQrData(JSON.stringify(viaturaInfo)); 
-        } else {
-            setQrData("");
-        }
+
+  useEffect(() => {
+    fetch(`${API_URL}/veiculo`)
+      .then(res => res.json())
+      .then(data => setPlacas(data))
+      .catch(err => console.error('Erro ao buscar placas:', err));
+  }, []);
+
+  useEffect(() => {
+    if (veiculoSelecionado) {
+      setCarregando(true);
+      fetch(`${API_URL}/veiculo/${veiculoSelecionado}`)
+        .then(res => res.json())
+        .then(data => {
+          setVeiculoDetalhes(data);
+          setMostrarQrCode(false);
+        })
+        .catch(err => console.error('Erro ao buscar veículo:', err))
+        .finally(() => setCarregando(false));
+    }
+  }, [veiculoSelecionado]);
+
+  useEffect(() => {
+    const carregarPlacas = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/veiculo`);
+        setPlacas(response.data);
+      } catch (error) {
+        console.error('Erro ao carregar placas:', error);
+      } finally {
+        setLoadingPlacas(false);
+      }
     };
 
-    return (
-        <ScrollView>
-            <View style={styles.container}>
-                <Text style={styles.title}>Gerar QR Code</Text>
-                <View style={styles.fieldContainerSmall}>
-                    <TextInput
-                        label="Número"
-                        placeholder="Número"
-                        value={viaturaInfo.numero}
-                        onChangeText={(text) => setViaturaInfo({ ...viaturaInfo, numero: text })}
-                        keyboardType="number-pad"
-                        mode="outlined"
-                        dense
-                    />
+    carregarPlacas();
+  }, []);
 
-                    <TextInput
-                        label="Placa"
-                        placeholder="Placa"
-                        value={viaturaInfo.placa}
-                        onChangeText={(text) => setViaturaInfo({ ...viaturaInfo, placa: text })}
-                        mode="outlined"
-                        dense
-                    />
-                    <TextInput
-                        label="Modelo"
-                        placeholder="Modelo"
-                        value={viaturaInfo.modelo}
-                        onChangeText={(text) => setViaturaInfo({ ...viaturaInfo, modelo: text })}
-                        mode="outlined"
-                        dense
-                    />
-                    <TextInput
-                        label="Equipe"
-                        placeholder="Equipe"
-                        value={viaturaInfo.equipe}
-                        onChangeText={(text) => setViaturaInfo({ ...viaturaInfo, equipe: text })}
-                        mode="outlined"
-                        dense
-                    />
-                    <TextInput
-                        label="Status"
-                        placeholder="Status"
-                        value={viaturaInfo.status}
-                        onChangeText={(text) => setViaturaInfo({ ...viaturaInfo, status: text })}
-                        mode="outlined"
-                        dense
-                    />
 
-                    <TouchableOpacity style={styles.button} onPress={gerarQRCode}>
-                        <Text style={styles.buttonText}>Gerar</Text>
-                    </TouchableOpacity>
+  const gerarQrCode = () => {
+    setMostrarQrCode(true);
+  };
 
-                    {
-                        qrData ? (
-                            <View style={styles.qrContainer}>
-                                <Text style={styles.qrTitle}>QR Code Gerado:</Text>
-                                <QRCode value={qrData} size={200} />
-                            </View>
-                        ) : (
-                            <Text style={styles.message}>Preencha todos os campos para gerar o QR Code</Text>
-                        )
-                    }
-                </View >
-            </View >
-        </ScrollView>
-    );
+  return (
+    <ScrollView>
+      <View style={styles.formContainer}>
+        <Text style={styles.formTitle}>Selecionar Veículo:</Text>
+
+        {loadingPlacas ? (
+          <Text style={styles.loadingText}>Carregando veiculos...</Text>
+        ) : (
+
+          <Picker
+            selectedValue={veiculoSelecionado}
+            onValueChange={(value) => setVeiculoSelecionado(value)}
+            style={styles.select}
+          >
+            <Picker.Item label="Escolha uma placa" value={null} />
+            {placas.map(veiculo => (
+              <Picker.Item key={veiculo.id} label={veiculo.placa} value={veiculo.id} />
+            ))}
+          </Picker>
+        )}
+
+        {carregando && <ActivityIndicator size="large" color="#0000ff" />}
+
+        {veiculoDetalhes && (
+          <View style={styles.formContainer}>
+            <Text style={styles.text}>Nome: {veiculoDetalhes.nome}</Text>
+            <Text style={styles.text}>Placa: {veiculoDetalhes.placa}</Text>
+            <Text style={styles.text}>Marca: {veiculoDetalhes.marca}</Text>
+            <Text style={styles.text}>Modelo: {veiculoDetalhes.modelo}</Text>
+            <Text style={styles.text}>Status: {veiculoDetalhes.status}</Text>
+            <TouchableOpacity style={styles.button} onPress={gerarQrCode}>
+              <Text style={styles.buttonText}>Gerar QR Code</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+      <View  >
+        {mostrarQrCode && veiculoDetalhes && (
+          <View style={styles.ContainerQr}>
+            <QRCode
+              value={JSON.stringify(veiculoDetalhes)}
+              size={200}
+            />
+          </View>
+        )}
+      </View>
+    </ScrollView>
+  );
 }
 
