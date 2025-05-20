@@ -50,7 +50,7 @@ class FinalizarViagemController extends Controller
         $validator = Validator::make($request->all(), [
             'veiculo_id' => 'required|exists:veiculos,id',
             'motorista_id' => 'required|exists:motoristas,id',
-            'hora_chegada' => 'required|date_format:Y-m-d H:i',
+            // 'hora_chegada' => 'required|date_format:Y-m-d H:i',
             'local_chegada' => 'required|string',
             'km_chegada' => 'required|integer',
             'km_total' => 'required|integer',

@@ -156,7 +156,7 @@ export default function ViagemScreen() {
       contentContainerStyle={{ paddingBottom: 100 }}
     >
       <View style={styles.formContainer}>
-        <Text style={styles.formTitle}>{editing ? "Editar Viagem" : "Nova Viagem"}</Text>
+        <Text style={styles.formTitle}>{editing ? "Editar Viagem" : "Finalizar Viagem"}</Text>
 
         {Object.keys(fieldLabels).map((field) => (
           field === "status" ? (
