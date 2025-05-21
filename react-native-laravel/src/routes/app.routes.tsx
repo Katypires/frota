@@ -9,6 +9,7 @@ import Viagem from "../pages/Viagem";
 import FinalizarViagem from "../pages/FinalizarViagem";
 import Camera from "../pages/Camera";
 import GerarQrcode from "../pages/GerarQrcode";
+import ReadQrcode from "../pages/ReadQrcode";
 
 const Stack = createNativeStackNavigator();
 
@@ -106,6 +107,17 @@ function AppRoutes() {
                 component={GerarQrcode}
                 options={{
                     title: "Gerar Qrcode",
+                    headerStyle: {
+                        backgroundColor: '#333',
+                    },
+                    headerTintColor: '#FFF',
+                }}
+            />
+            <Stack.Screen
+                name="ReadQrcode"
+                component={ReadQrcode}
+                options={{
+                    title: "Ler Qrcode",
                     headerStyle: {
                         backgroundColor: '#333',
                     },
