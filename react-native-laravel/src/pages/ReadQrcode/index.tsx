@@ -11,12 +11,13 @@ type CameraFlash = "on" | "off" | "auto";
 export default function Camera() {
     const [cameraReady, setCameraReady] = useState(false);
     const [cameraFlash, setCameraFlash] = useState<CameraFlash>('off');
-    const [cameraFacing, setCameraFacing] = useState<CameraFacing>('back');
+
     const [qrResult, setQrResult] = useState<any | null>(null);
     const zoomLevels = [0, 0.25, 0.5, 0.75, 1];
     const [zoomIndex, setZoomIndex] = useState(0);
     const [photoFile, setPhotoFile] = useState<string | null>(null);
     const [permission, requestPermission] = useCameraPermissions();
+    const [qrError, setQrError] = useState<string | null>(null);
 
     const cameraRef = useRef<CameraView>(null);
 
@@ -32,14 +33,6 @@ export default function Camera() {
                 </Pressable>
             </View>
         );
-    }
-
-    const handleCameraFacing = () => {
-        if (cameraFacing === 'front') {
-            setCameraFacing('back');
-        } else {
-            setCameraFacing('front');
-        }
     }
 
     const handleCameraFlash = () => {
@@ -59,11 +52,13 @@ export default function Camera() {
         try {
             const json = JSON.parse(result.data);
             setQrResult(json);
+            setQrError(null);
         } catch (error) {
             console.warn("QR Code inválido:", error);
             setQrResult(null);
+            setQrError("QR Code inválido. Tente novamente.");
         }
-    }
+    };
 
 
     const handleZoom = () => {
@@ -87,12 +82,14 @@ export default function Camera() {
         }
     };
 
+
+
+
     return (
         <View style={styles.container}>
             <CameraView
                 ref={cameraRef}
                 style={styles.cameraView}
-                facing={cameraFacing}
                 flash={cameraFlash}
                 zoom={zoomLevels[zoomIndex]}
                 onBarcodeScanned={handleBarCode}
@@ -113,8 +110,17 @@ export default function Camera() {
                     </View>
                     <View style={styles.bottomOverlay} />
                 </View>
+            <View style={styles.buttonContainer}>
+                <Pressable style={[styles.button, { marginLeft: 'auto' }]} onPress={handleZoom}>
+                    <Feather name="zoom-in" size={20} color="#FFF" />
+                </Pressable>
 
+                <Pressable style={[styles.button, { marginLeft: 'auto' }]} onPress={handleCameraFlash}>
+                    <Feather name={cameraFlash === 'off' ? 'zap-off' : 'zap'} size={20} color="#FFF" />
+                </Pressable>
+            </View>
             </CameraView>
+
             <Text style={styles.textMensagem}>Aponte a câmera para o QR Code</Text>
             {photoFile &&
                 <Image source={{ uri: photoFile }} style={styles.photo} />
@@ -129,6 +135,12 @@ export default function Camera() {
                     <Text style={styles.qrText}>Status: {qrResult.status}</Text>
                 </View>
             )}
+            {qrError && (
+                <View>
+                    <Text style={styles.errorText}>{qrError}</Text>
+                </View>
+            )}
+
         </View>
     );
 }

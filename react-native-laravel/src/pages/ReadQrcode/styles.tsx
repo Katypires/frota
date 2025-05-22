@@ -143,5 +143,23 @@ export const styles = StyleSheet.create({
         borderRadius: 10,
         marginHorizontal: 10,
     },
+    errorText: {
+        color: '#721c24',
+        fontWeight: 'bold',
+        textAlign: "center",
+        backgroundColor: '#f8d7da',
+        padding: 10,
+        borderRadius: 5,
+        margin: 10,
+        flexDirection: 'row', justifyContent: 'flex-start', gap: 10 
+        
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        marginHorizontal: 10,
+       
+         
+    },
+    
 
 });

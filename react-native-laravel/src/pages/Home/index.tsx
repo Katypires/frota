@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { Feather } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/Feather';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from "../../contexts/AuthContext";
 import { styles } from "./styles";  
@@ -21,7 +21,7 @@ export default function Home() {
         { title: "Viagem", icon: "map", route: "Viagem" },
         { title: "Finalizar Viagem", icon: "check-circle", route: "FinalizarViagem" },
         { title: "Câmera", icon: "camera", route: "Camera" },
-        { title: "Gerar Qrcode", icon: "J", route: "GerarQrcode" },
+        { title: "Gerar Qrcode", icon: "", route: "GerarQrcode" },
         { title: "Read Qrcode", icon: "", route: "ReadQrcode" },
         // { title: "Relatórios", icon: "file-text", route: "Relatorio" },
     ];
