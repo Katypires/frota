@@ -5,18 +5,7 @@ export const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#f0f0f5",
     },
-    header: {
-        padding: 20,
-        backgroundColor: "#333",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-    },
-    headerText: {
-        fontSize: 20,
-        color: "#fff",
-        fontWeight: "bold",
-    },
+   
     logoutButton: {
         backgroundColor: "#ff5c5c",
         padding: 10,
@@ -47,4 +36,28 @@ export const styles = StyleSheet.create({
         fontSize: 16,
         color: "#333",
     },
+    
+    header: {
+        backgroundColor: '#333',
+        padding: 16,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      },
+      
+      headerText: {
+        fontSize: 18,
+        color: '#FFF',
+        fontWeight: 'bold',
+      },
+      
+      usuarioContainer: {
+        marginTop: 4,
+      },
+      
+      usuarioNome: {
+        color: '#FFF',
+        fontSize: 14,
+      },
+
 });

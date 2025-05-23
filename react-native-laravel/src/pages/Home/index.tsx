@@ -4,13 +4,13 @@ import { Feather } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from "../../contexts/AuthContext";
-import { styles } from "./styles";  
+import { styles } from "./styles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from 'react-native';
 
 
 export default function Home() {
-    const { signOut } = useContext(AuthContext);
+    const { user, signOut } = useContext(AuthContext);
     const navigation = useNavigation();
 
     const cards = [
@@ -34,12 +34,22 @@ export default function Home() {
                 contentContainerStyle={{ paddingBottom: 100 }}
             >
                 <View style={styles.header}>
-                    <Text style={styles.headerText}>Bem-vindo ao Sistema</Text>
+                    <View>
+                        <Text style={styles.headerText}>Bem-vindo ao Sistema</Text>
+
+                        {user && (
+                            <View style={styles.usuarioContainer}>
+                                <Text style={styles.usuarioNome}>{user.name}</Text>
+                            </View>
+                        )}
+                    </View>
 
                     <TouchableOpacity onPress={signOut}>
                         <Icon name="log-out" size={20} color="#FFF" />
                     </TouchableOpacity>
                 </View>
+
+
 
                 <View style={styles.cardsContainer}>
                     {cards.map((card, index) => (

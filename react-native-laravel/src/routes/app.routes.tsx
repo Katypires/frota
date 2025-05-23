@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "../pages/Home";
 import Motorista from "../pages/Motorista";
@@ -10,6 +10,8 @@ import FinalizarViagem from "../pages/FinalizarViagem";
 import Camera from "../pages/Camera";
 import GerarQrcode from "../pages/GerarQrcode";
 import ReadQrcode from "../pages/ReadQrcode";
+import { Text, View } from "react-native";
+import { AuthContext } from "../contexts/AuthContext";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +20,7 @@ export type StackParamsList = {
 };
 
 function AppRoutes() {
+    const { user } = useContext(AuthContext);
     return (
         <Stack.Navigator>
             <Stack.Screen
@@ -34,6 +37,13 @@ function AppRoutes() {
                         backgroundColor: '#333',
                     },
                     headerTintColor: '#FFF',
+                    headerRight: () => (
+                        user ? (
+                            <View style={{ marginRight: 10 }}>
+                                <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 14 }}>{user.name}</Text>
+                            </View>
+                        ) : null
+                    ),
                 }}
             />
             <Stack.Screen
@@ -45,6 +55,13 @@ function AppRoutes() {
                         backgroundColor: '#333',
                     },
                     headerTintColor: '#FFF',
+                    headerRight: () => (
+                        user ? (
+                            <View style={{ marginRight: 10 }}>
+                                <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 14 }}>{user.name}</Text>
+                            </View>
+                        ) : null
+                    ),
                 }}
             />
             <Stack.Screen
@@ -56,6 +73,13 @@ function AppRoutes() {
                         backgroundColor: '#333',
                     },
                     headerTintColor: '#FFF',
+                    headerRight: () => (
+                        user ? (
+                            <View style={{ marginRight: 10 }}>
+                                <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 14 }}>{user.name}</Text>
+                            </View>
+                        ) : null
+                    ),
                 }}
             />
             <Stack.Screen
@@ -67,18 +91,32 @@ function AppRoutes() {
                         backgroundColor: '#333',
                     },
                     headerTintColor: '#FFF',
+                    headerRight: () => (
+                        user ? (
+                            <View style={{ marginRight: 10 }}>
+                                <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 14 }}>{user.name}</Text>
+                            </View>
+                        ) : null
+                    ),
                 }}
             />
             <Stack.Screen
                 name="Viagem"
                 component={Viagem}
-                options={{
+                options={({ route }) => ({
                     title: "Viagens",
                     headerStyle: {
                         backgroundColor: '#333',
                     },
                     headerTintColor: '#FFF',
-                }}
+                    headerRight: () => (
+                        user ? (
+                            <View style={{ marginRight: 10 }}>
+                                <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 14 }}>{user.name}</Text>
+                            </View>
+                        ) : null
+                    ),
+                })}
             />
             <Stack.Screen
                 name="FinalizarViagem"
@@ -89,6 +127,13 @@ function AppRoutes() {
                         backgroundColor: '#333',
                     },
                     headerTintColor: '#FFF',
+                    headerRight: () => (
+                        user ? (
+                            <View style={{ marginRight: 10 }}>
+                                <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 14 }}>{user.name}</Text>
+                            </View>
+                        ) : null
+                    ),
                 }}
             />
             <Stack.Screen
@@ -100,6 +145,13 @@ function AppRoutes() {
                         backgroundColor: '#333',
                     },
                     headerTintColor: '#FFF',
+                    headerRight: () => (
+                        user ? (
+                            <View style={{ marginRight: 10 }}>
+                                <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 14 }}>{user.name}</Text>
+                            </View>
+                        ) : null
+                    ),
                 }}
             />
             <Stack.Screen
@@ -111,6 +163,13 @@ function AppRoutes() {
                         backgroundColor: '#333',
                     },
                     headerTintColor: '#FFF',
+                    headerRight: () => (
+                        user ? (
+                            <View style={{ marginRight: 10 }}>
+                                <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 14 }}>{user.name}</Text>
+                            </View>
+                        ) : null
+                    ),
                 }}
             />
             <Stack.Screen
@@ -122,6 +181,13 @@ function AppRoutes() {
                         backgroundColor: '#333',
                     },
                     headerTintColor: '#FFF',
+                    headerRight: () => (
+                        user ? (
+                            <View style={{ marginRight: 10 }}>
+                                <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 14 }}>{user.name}</Text>
+                            </View>
+                        ) : null
+                    ),
                 }}
             />
         </Stack.Navigator>
