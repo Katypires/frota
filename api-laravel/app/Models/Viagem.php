@@ -12,8 +12,7 @@ class Viagem extends Model
     protected $table = 'viagems';
 
     protected $fillable = [
-        'veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida',
-        'local_saida', 'local_destino', 'km_chegada', 'km_total', 'nota', 'status'
+        'veiculo_id', 'motorista_id', 'data_viagem', 'nivel_combustivel', 'nota', 'status'
     ];
 
     public function motorista() {

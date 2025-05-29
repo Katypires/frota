@@ -13,12 +13,15 @@ return new class extends Migration
     {
         Schema::create('motoristas', function (Blueprint $table) {
             $table->id();
-            $table->string('nome');
-            $table->string('cpf');
-            $table->string('matricula');
-            $table->string('status');
+            $table->foreignId('profissional_id')->constrained('profissionals')->onDelete('cascade');
+            $table->string('cnh')->nullable();
+            $table->date('validade')->nullable();
+            $table->json('categoria')->nullable(); 
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->boolean('status')->default(true);
             $table->timestamps();
         });
+        
     }
 
     /**
@@ -29,3 +32,4 @@ return new class extends Migration
         Schema::dropIfExists('motoristas');
     }
 };
+

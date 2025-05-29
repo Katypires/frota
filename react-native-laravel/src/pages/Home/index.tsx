@@ -15,6 +15,7 @@ export default function Home() {
 
     const cards = [
         { title: "Motoristas", icon: "user", route: "Motorista" },
+        { title: "Profissional", icon: "user", route: "Profissional" },
         { title: "Unidades", icon: "layers", route: "Unidade" },
         { title: "Veiculos", icon: "truck", route: "Veiculo" },
         { title: "Unidade Veiculos", icon: "grid", route: "UnidadeVeiculo" },

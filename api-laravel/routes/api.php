@@ -13,6 +13,8 @@ use App\Http\Controllers\ApiFrota\VistoriaController;
 use App\Http\Controllers\ApiFrota\ViagemController;
 use App\Http\Controllers\ApiFrota\UnidadeController;
 use App\Http\Controllers\ApiFrota\UnidadeVeiculoController;
+use App\Http\Controllers\ApiFrota\ProfissionalController;
+use App\Http\Controllers\ApiFrota\ViagemDestinoController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -22,7 +24,7 @@ Route::get("/teste", function(){
 
 //ROTAS USUARIO
 Route::post("/auth/login", [AuthController::class, 'login']);
-Route::post("/auth/logout", [AuthController::class, 'logout']);
+Route::middleware('auth:api')->post("/auth/logout", [AuthController::class, 'logout']);
 Route::post("/auth/refresh", [AuthController::class, 'refresh']);
 Route::post("/user", [AuthController::class, 'create']);
 Route::get("/user", [UserController::class, 'read']);
@@ -40,4 +42,6 @@ Route::resources([
     'unidade' => UnidadeController::class,
     'unidade_veiculo' => UnidadeVeiculoController::class,
     'finalizar_viagem' => FinalizarViagemController::class,
+    'profissional' => ProfissionalController::class,
+    'viagem_destino' => ViagemDestinoController::class,
 ]);

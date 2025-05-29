@@ -19,22 +19,19 @@ class AuthController extends Controller
    {
       $array = ["error" => ""];
 
-      //valida campos
       $validator = Validator::make($request->all(), [
          'name' => 'required',
          'email' => 'required|email',
          'password' => 'required'
       ]);
 
-      //caso validacao NAO tenha dado erro
       if (!$validator->fails()) {
          $name = $request->input("name");
          $email = $request->input("email");
          $password = $request->input("password");
 
-         //ver se email existe
          $emailExists = User::where("email", $email)->count();
-         //caso nao existe, cria um novo usuario 
+         
          if ($emailExists === 0) {
             $hash = password_hash($password, PASSWORD_DEFAULT);
             $newUser = new User();
@@ -99,8 +96,17 @@ class AuthController extends Controller
       return $array;
    }
 
-   public function logout(){
-      auth()->logout();
-      return response()->json(['success' => true]);
-   }
+   public function logout()
+{
+    try {
+        auth()->logout();
+        return response()->json(['success' => true]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'Erro ao sair',
+            'message' => $e->getMessage(),
+        ], 500);
+    }
+}
+
 }

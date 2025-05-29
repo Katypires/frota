@@ -67,7 +67,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 password,
             });
 
-            const { user, token } = response.data.data;
+            const { user, token } = response.data;
 
             const userData: UserProps = {
                 id: String(user.id),
@@ -88,7 +88,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     async function signOut() {
         try {
-            await api.post("/auth/logout");
+            const token = user.token;
+            if (token) {
+                api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+                await api.post("/auth/logout");
+            }
         } catch (e) {
             console.log("Erro ao fazer logout na API:", e);
         } finally {

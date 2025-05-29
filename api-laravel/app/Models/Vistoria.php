@@ -9,7 +9,7 @@ class Vistoria extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['veiculo_id', 'motorista_id', 'data_vistoria', 'estepe', 'pneu'];
+    protected $fillable = ['veiculo_id', 'motorista_id', 'data_vistoria', 'estepe', 'pneu', 'status'];
 
     public function motorista() {
         return $this->belongsTo(Motorista::class);

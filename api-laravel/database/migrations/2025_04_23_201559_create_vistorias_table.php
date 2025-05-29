@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('data_vistoria');
             $table->boolean('estepe');
             $table->boolean('pneu');
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

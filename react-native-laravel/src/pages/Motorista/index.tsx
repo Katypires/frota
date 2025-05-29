@@ -9,16 +9,20 @@ import Checkbox from "expo-checkbox";
 
 interface Motorista {
     id: string | number;
-    nome: string;
-    cpf: string;
-    matricula: string;
+    profissional_id: string | number;
+    cnh: string;
+    validade: string;
+    categoria: string;
+    user_id: string | number;
     status: string;
 }
 
 interface FormData {
-    nome: string;
-    cpf: string;
-    matricula: string;
+    profissional_id: string | number;
+    cnh: string;
+    validade: string;
+    categoria: string;
+    user_id: string | number;
     status: string;
 }
 
@@ -30,9 +34,11 @@ export default function Motorista() {
     const [editingId, setEditingId] = useState<string | number | null>(null);
 
     const [formData, setFormData] = useState<FormData>({
-        nome: "",
-        cpf: "",
-        matricula: "",
+        profissional_id: "",
+        cnh: "",
+        validade: "",
+        categoria: "",
+        user_id: "",
         status: "",
     });
 
@@ -49,12 +55,12 @@ export default function Motorista() {
     }
 
     async function handleSubmit() {
-        if (!formData.nome || !formData.cpf || !formData.matricula || !formData.status) return;
+        if (!formData.profissional_id || !formData.cnh || !formData.validade || !formData.categoria || !formData.user_id || !formData.status) return;
 
         setLoading(true);
         try {
             const response = await api.post("/motorista", formData);
-            setFormData({ nome: "", cpf: "", matricula: "", status: "" });
+            setFormData({ profissional_id: "", cnh: "", validade: "", categoria: "", user_id: "", status: "" });
             fetchMotoristas();
         } catch (e) {
             console.log(e);
@@ -69,7 +75,7 @@ export default function Motorista() {
         setLoading(true);
         try {
             await api.put(`/motorista/${editingId}`, formData);
-            setFormData({ nome: "", cpf: "", matricula: "", status: "" });
+            setFormData({ profissional_id: "", cnh: "", validade: "", categoria: "", user_id: "", status: "" });
             setEditing(false);
             setEditingId(null);
             fetchMotoristas();
@@ -95,9 +101,11 @@ export default function Motorista() {
             const data = response.data;
 
             setFormData({
-                nome: data.nome,
-                cpf: data.cpf,
-                matricula: data.matricula,
+                profissional_id: data.profissional_id,
+                cnh: data.cnh,
+                validade: data.validade,
+                categoria: data.categoria,
+                user_id: data.user_id,
                 status: data.status,
             });
 
@@ -127,7 +135,7 @@ export default function Motorista() {
             <View style={styles.formContainer}>
                 <Text style={styles.formTitle}>{editing ? "Editar Motorista" : "Adicionar Motorista"}</Text>
 
-                {["nome", "cpf", "matricula", "status"].map((field) => (
+                {["profissional_id", "cnh", "validade", "categoria", "user_id", "status"].map((field) => (
                     field === "status" ? (
                         <View key="status" style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
                             <Checkbox
@@ -181,8 +189,8 @@ export default function Motorista() {
                         motoristas.map((motorista) => (
                             <View key={String(motorista.id)} style={styles.tableRow}>
                                 <Text style={[styles.tableCell, styles.idColumn]}>{motorista.id}</Text>
-                                <Text style={[styles.tableCell, styles.nameColumn]}>{motorista.nome}</Text>
-                                <Text style={[styles.tableCell, styles.matriculaColumn]}>{motorista.matricula}</Text>
+                                <Text style={[styles.tableCell, styles.nameColumn]}>{motorista.profissional_id}</Text>
+                                <Text style={[styles.tableCell, styles.matriculaColumn]}>{motorista.validade}</Text>
                                 <View style={[styles.actionColumn, styles.actionButtons]}>
                                     <TouchableOpacity style={styles.editButton} onPress={() => loadEditItem(motorista.id)}>
                                         <Icon name="edit" size={16} color="#999" />

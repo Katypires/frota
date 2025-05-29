@@ -11,29 +11,37 @@ class MotoristaController extends Controller
 {
     public function index()
     {
-        return response()->json(Motorista::select('id', 'nome', 'cpf', 'matricula', 'status')->get());
+        return response()->json(
+            Motorista::with('profissional', 'user')->get()
+        );
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nome' => 'required',
-            'cpf' => 'required',
-            'matricula' => 'required',
-            'status' => 'required'
+            'profissional_id' => 'required|exists:profissionals,id',
+            'cnh' => 'nullable|string',
+            'validade' => 'nullable|date',
+            'categoria' => 'nullable|array', 
+            'user_id' => 'required|exists:users,id',
+            'status' => 'required|boolean'
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => 'Dados inválidos'], 400);
+            return response()->json([
+                'error' => 'Dados inválidos',
+                'messages' => $validator->errors()
+            ], 400);
         }
 
-        $motorista = Motorista::create($request->only(['nome', 'cpf', 'matricula', 'status']));
+        $motorista = Motorista::create($request->all());
+
         return response()->json($motorista, 201);
     }
 
     public function show($id)
     {
-        $motorista = Motorista::select('id', 'nome', 'cpf', 'matricula', 'status')->find($id);
+        $motorista = Motorista::with('profissional', 'user')->find($id);
 
         if (!$motorista) {
             return response()->json(['error' => 'Motorista não encontrado'], 404);
@@ -44,24 +52,29 @@ class MotoristaController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'nome' => 'required',
-            'cpf' => 'required',
-            'matricula' => 'required',
-            'status' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['error' => 'Dados inválidos'], 400);
-        }
-
         $motorista = Motorista::find($id);
 
         if (!$motorista) {
             return response()->json(['error' => 'Motorista não encontrado'], 404);
         }
 
-        $motorista->update($request->only(['nome', 'cpf', 'matricula', 'status']));
+        $validator = Validator::make($request->all(), [
+            'profissional_id' => 'required|exists:profissionals,id',
+            'cnh' => 'nullable|string',
+            'validade' => 'nullable|date',
+            'categoria' => 'nullable|array',
+            'user_id' => 'required|exists:users,id',
+            'status' => 'required|boolean'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error' => 'Dados inválidos',
+                'messages' => $validator->errors()
+            ], 400);
+        }
+
+        $motorista->update($request->all());
 
         return response()->json($motorista);
     }

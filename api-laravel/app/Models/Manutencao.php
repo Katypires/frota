@@ -9,7 +9,7 @@ class Manutencao extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['veiculo_id', 'motorista_id', 'data', 'km', 'tipo_ocorrencia'];
+    protected $fillable = ['veiculo_id', 'motorista_id', 'data', 'km', 'tipo_ocorrencia', 'status'];
 
     public function motorista() {
         return $this->belongsTo(Motorista::class);

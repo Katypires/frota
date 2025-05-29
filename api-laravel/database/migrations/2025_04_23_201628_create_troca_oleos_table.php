@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('ultima_troca');
             $table->integer('km');
             $table->integer('proxima_troca');
+            $table->boolean('status')->default(true);
             $table->timestamps();
         });
     }

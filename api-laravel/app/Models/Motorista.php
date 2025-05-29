@@ -9,21 +9,48 @@ class Motorista extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nome', 'cpf', 'matricula', 'status'];
+    protected $fillable = [
+        'profissional_id',
+        'cnh',
+        'validade',
+        'categoria',
+        'user_id',
+        'status'
+    ];
 
-    public function vistorias() {
+    protected $casts = [
+        'categoria' => 'array',
+        'validade' => 'date',
+        'status' => 'boolean',
+    ];
+
+    public function profissional()
+    {
+        return $this->belongsTo(Profissional::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function vistorias()
+    {
         return $this->hasMany(Vistoria::class);
     }
 
-    public function abastecimentos() {
+    public function abastecimentos()
+    {
         return $this->hasMany(Abastecimento::class);
     }
 
-    public function manutencoes() {
+    public function manutencoes()
+    {
         return $this->hasMany(Manutencao::class);
     }
 
-    public function viagens() {
+    public function viagens()
+    {
         return $this->hasMany(Viagem::class);
     }
 }

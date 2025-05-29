@@ -17,7 +17,14 @@ php artisan make:model TrocaOleo -mcr
 php artisan make:model Viagem -mcr
 php artisan make:model Unidade -mcr
 php artisan make:model UnidadeVeiculo -mcr
+php artisan make:model Profissional -mcr
+php artisan make:model ViagemDestino -mcr
 
 ==============================================
 
 foi feito os controller: Motorista, Veiculo, Vistoria, Manutencao e Abastecimento.
+
+comando para dar migrate separado para para acrescentar uma coluna e não perder os dados do banco de dados.
+php artisan make:migration add_profissional_id_to_motoristas_table
+
+

@@ -18,8 +18,8 @@ return new class extends Migration
             $table->date('data_abastecimento');
             $table->integer('km');
             $table->integer('litros');
-            $table->string('tipo');
-            $table->string('status');
+            $table->enum('tipo', ['ALCOOL', 'GASOLINA'])->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

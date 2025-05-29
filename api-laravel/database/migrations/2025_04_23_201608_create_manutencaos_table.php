@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('data');
             $table->integer('km');
             $table->string('tipo_ocorrencia');
+            $table->boolean('status')->default(true);
             $table->timestamps();
         });
     }

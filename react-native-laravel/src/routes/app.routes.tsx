@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "../pages/Home";
 import Motorista from "../pages/Motorista";
+import Profissional from "../pages/Profissional";
 import Unidade from "../pages/Unidade";
 import Veiculo from "../pages/Veiculo";
 import UnidadeVeiculo from "../pages/UnidadeVeiculo";
@@ -33,6 +34,24 @@ function AppRoutes() {
                 component={Motorista}
                 options={{
                     title: "Motoristas",
+                    headerStyle: {
+                        backgroundColor: '#333',
+                    },
+                    headerTintColor: '#FFF',
+                    headerRight: () => (
+                        user ? (
+                            <View style={{ marginRight: 10 }}>
+                                <Text style={{ color: '#FFF', fontWeight: 'bold', fontSize: 14 }}>{user.name}</Text>
+                            </View>
+                        ) : null
+                    ),
+                }}
+            />
+            <Stack.Screen
+                name="Profissional"
+                component={Profissional}
+                options={{
+                    title: "Profissional",
                     headerStyle: {
                         backgroundColor: '#333',
                     },
