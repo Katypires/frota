@@ -8,9 +8,12 @@ import {
     ActivityIndicator,
 } from "react-native";
 import { AuthContext } from "../../contexts/AuthContext";
+import { useNavigation } from '@react-navigation/native';
+
 
 export default function SignIn() {
     const { signIn, loadingAuth } = useContext(AuthContext);
+    const navigation = useNavigation<any>();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -32,7 +35,7 @@ export default function SignIn() {
                     value={email}
                     onChangeText={setEmail}
                     inputMode="email"
-                    
+
                 />
                 <TextInput
                     placeholder="Digite sua senha"
@@ -49,6 +52,9 @@ export default function SignIn() {
                     ) : (
                         <Text style={styles.buttonText}>Acessar</Text>
                     )}
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('RegisterUser')}>
+                    <Text style={{ color: '#3fffa3', marginTop: 16 }}>Registrar</Text>
                 </TouchableOpacity>
             </View>
         </View>

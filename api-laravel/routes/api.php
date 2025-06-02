@@ -28,6 +28,8 @@ Route::middleware('auth:api')->post("/auth/logout", [AuthController::class, 'log
 Route::post("/auth/refresh", [AuthController::class, 'refresh']);
 Route::post("/user", [AuthController::class, 'create']);
 Route::get("/user", [UserController::class, 'read']);
+Route::post('/register', [AuthController::class, 'register']);
+
 //ROTAS ITEM
 Route::resource('/item', ItemController::class);
 
