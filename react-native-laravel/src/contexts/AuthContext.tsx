@@ -67,7 +67,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 password,
             });
 
-            const { user, token } = response.data;
+            console.log("✅ Resposta da API:", response.data.data); 
+
+            const { user, token } = response.data.data;
 
             const userData: UserProps = {
                 id: String(user.id),

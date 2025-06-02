@@ -5,7 +5,7 @@ import { Picker } from '@react-native-picker/picker';
 import { styles } from './styles';
 import axios from 'axios';
 
-const API_URL = 'http://10.8.2.140:8000/api';
+const API_URL = 'http://10.8.4.111:8000/api';
 
 export default function GerarQrCode() {
   const [placas, setPlacas] = useState([]);
