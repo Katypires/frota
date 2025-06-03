@@ -31,7 +31,7 @@ class AuthController extends Controller
          $password = $request->input("password");
 
          $emailExists = User::where("email", $email)->count();
-         
+
          if ($emailExists === 0) {
             $hash = password_hash($password, PASSWORD_DEFAULT);
             $newUser = new User();
@@ -57,7 +57,6 @@ class AuthController extends Controller
                'user' => $info,
                'token' => $token
             ];
-
          } else {
             $array['error'] = "Email ja cadastrado";
             return $array;
@@ -97,34 +96,42 @@ class AuthController extends Controller
    }
 
    public function logout()
-{
-    try {
-        auth()->logout();
-        return response()->json(['success' => true]);
-    } catch (\Exception $e) {
-        return response()->json([
+   {
+      try {
+         auth()->logout();
+         return response()->json(['success' => true]);
+      } catch (\Exception $e) {
+         return response()->json([
             'error' => 'Erro ao sair',
             'message' => $e->getMessage(),
-        ], 500);
-    }
-}
+         ], 500);
+      }
+   }
 
-public function register(Request $request)
-{
-    $validated = $request->validate([
-        'name' => 'required',
-        'email' => 'required|email|unique:users',
-        'password' => 'required|min:6',
-    ]);
+   public function register(Request $request)
+   {
+      $validated = $request->validate([
+         'name' => 'required',
+         'email' => 'required|email|unique:users',
+         'password' => 'required|min:6',
+      ]);
 
-    $user = User::create([
-        'name' => $validated['name'],
-        'email' => $validated['email'],
-        'password' => bcrypt($validated['password']),
-    ]);
+      $user = User::create([
+         'name' => $validated['name'],
+         'email' => $validated['email'],
+         'password' => bcrypt($validated['password']),
+      ]);
 
-    return response()->json($user);
-}
+      $token = auth()->attempt([
+         'email' => $validated['email'],
+         'password' => $validated['password'],
+      ]);
 
-
+      return response()->json([
+         'data' => [
+            'user' => $user,
+            'token' => $token,
+         ]
+      ]);
+   }
 }

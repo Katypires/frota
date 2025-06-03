@@ -18,8 +18,17 @@ export default function RegisterUser() {
         password: senha,
       });
 
-      const user = response.data.data.user;
-      navigation.navigate('RegisterProfissional', { userId: user.id });
+
+      const user = response.data?.data?.user;
+
+      console.log("Usuário criado:", user);  
+
+      if (user && user.id) {
+        navigation.navigate('Profissional', { userId: user.id });  
+      } else {
+        console.warn("Usuário criado, mas sem ID.");
+      }
+
     } catch (error: any) {
       console.error('Erro ao registrar:', error?.response?.data || error.message);
     }
@@ -32,14 +41,14 @@ export default function RegisterUser() {
         style={styles.input}
         value={nome}
         onChangeText={setNome}
-        placeholderTextColor="#CCC"
+        placeholderTextColor="#282A36"
       />
       <TextInput
         placeholder="Email"
         style={styles.input}
         value={email}
         onChangeText={setEmail}
-        placeholderTextColor="#CCC"
+        placeholderTextColor="#282A36"
       />
       <TextInput
         placeholder="Senha"
@@ -47,7 +56,7 @@ export default function RegisterUser() {
         secureTextEntry
         value={senha}
         onChangeText={setSenha}
-        placeholderTextColor="#CCC"
+        placeholderTextColor="#282A36"
       />
       <Button title="Avançar" onPress={handleRegister} />
     </View>
@@ -58,8 +67,8 @@ const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', padding: 20 },
   input: {
     height: 45,
-    backgroundColor: '#282A36',
-    color: '#FFF',
+    backgroundColor: '#FFF',
+    color: '#282A36',
     marginBottom: 12,
     paddingHorizontal: 10,
     borderRadius: 8,

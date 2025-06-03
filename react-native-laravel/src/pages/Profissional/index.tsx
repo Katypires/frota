@@ -36,7 +36,7 @@ export default function ProfissionalScreen() {
   });
 
   const fieldLabels: { [key: string]: string } = {
-    nome: "Nome",
+    nome: "Cargo",
     cpf: "CPF",
     matricula: "Matrícula",
     celular: "Celular",
@@ -62,7 +62,9 @@ export default function ProfissionalScreen() {
       resetForm();
       fetchProfissionais();
     } catch (e) {
-      console.log(e);
+      console.log('Enviando profissional:', formData);
+      await api.post('/profissional', { ...formData });
+
     } finally {
       setLoading(false);
     }
