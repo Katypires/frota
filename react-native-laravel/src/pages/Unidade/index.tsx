@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import Icon from 'react-native-vector-icons/Feather';
 import { Feather } from '@expo/vector-icons';
-import { View, Text, TouchableOpacity, TextInput, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, ScrollView, Alert } from "react-native";
 import { AuthContext } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
 import { styles } from "./styles";
@@ -51,6 +51,9 @@ export default function Unidade() {
             const response = await api.post("/unidade", formData);
             setFormData({ nome: "", status: "" });
             fetchUnidades();
+
+            Alert.alert("Sucesso", "Unidade cadastrado com sucesso!");
+
         } catch (e) {
             console.log(e);
         } finally {
@@ -68,6 +71,9 @@ export default function Unidade() {
             setEditing(false);
             setEditingId(null);
             fetchUnidades();
+
+            Alert.alert("Sucesso", "Unidade atualizada com sucesso!");
+
         } catch (e) {
             console.log(e);
         } finally {

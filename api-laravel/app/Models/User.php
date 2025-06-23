@@ -34,4 +34,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function profissional()
+    {
+        return $this->hasOne(Profissional::class);
+    }
 }

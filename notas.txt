@@ -28,9 +28,4 @@ comando para dar migrate separado para para acrescentar uma coluna e não perder
 php artisan make:migration add_profissional_id_to_motoristas_table
 
 
-03-06-25
-preciso ver esse resultado
-Enviando profissional: {"celular": "065874563393", "codigo": "1", 
-"cpf": "08567483428", "matricula": "34567828", "nome": "Bianca", "status": true, "user_id": ""}
-
 

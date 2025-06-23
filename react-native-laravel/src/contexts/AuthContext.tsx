@@ -1,6 +1,8 @@
 import React, { useState, createContext, ReactNode, useEffect } from "react";
 import { api } from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Alert } from "react-native";
+import { useNavigation } from "expo-router";
 
 type AuthContextData = {
     user: UserProps;
@@ -30,6 +32,7 @@ type SignInProps = {
 export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
+    const navigation = useNavigation<any>();
     const [user, setUser] = useState<UserProps>({
         id: "",
         name: "",
@@ -90,16 +93,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     async function signOut() {
         try {
-            const token = user.token;
-            if (token) {
-                api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-                await api.post("/auth/logout");
+            const token = user?.token;
+            if (!token) {
+                Alert.alert("Erro", "Token ausente. Não é possível fazer logout.");
+                return;
             }
+    
+            api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+            await api.post("/auth/logout");
+            console.log("Logout bem-sucedido na API.");
         } catch (e) {
-            console.log("Erro ao fazer logout na API:", e);
+            console.log("Erro ao fazer logout na API:", e?.response?.data || e.message);
+            Alert.alert("Erro", "Não foi possível fazer logout. Tente novamente.");
         } finally {
             await AsyncStorage.clear();
             setUser({ id: "", name: "", email: "", token: "" });
+            
+            navigation.reset({
+                index: 0,
+                routes: [{ name: "SignIn" }],
+            });
         }
     }
 

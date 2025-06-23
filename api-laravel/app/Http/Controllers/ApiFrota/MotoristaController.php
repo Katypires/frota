@@ -22,7 +22,7 @@ class MotoristaController extends Controller
             'profissional_id' => 'required|exists:profissionals,id',
             'cnh' => 'nullable|string',
             'validade' => 'nullable|date',
-            'categoria' => 'nullable|array', 
+            'categoria' => 'nullable|array',
             'user_id' => 'required|exists:users,id',
             'status' => 'required|boolean'
         ]);

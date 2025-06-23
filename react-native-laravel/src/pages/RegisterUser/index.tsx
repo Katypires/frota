@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet, Alert } from 'react-native';
 import { api } from '../../services/api';
 import { useNavigation } from '@react-navigation/native';
 
@@ -18,19 +18,24 @@ export default function RegisterUser() {
         password: senha,
       });
 
+      Alert.alert("Sucesso", "Usuario cadastrado com sucesso!");
 
       const user = response.data?.data?.user;
 
-      console.log("Usuário criado:", user);  
-
       if (user && user.id) {
-        navigation.navigate('Profissional', { userId: user.id });  
+        
+        navigation.navigate('Profissional', {
+          userId: user.id,
+          email: email,
+          password: senha,
+        });
       } else {
         console.warn("Usuário criado, mas sem ID.");
+        Alert.alert("Erro", "Usuário criado, mas houve um problema.");
       }
-
     } catch (error: any) {
       console.error('Erro ao registrar:', error?.response?.data || error.message);
+      Alert.alert("Erro", error?.response?.data?.message || "Erro inesperado");
     }
   }
 

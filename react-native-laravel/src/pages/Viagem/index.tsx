@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import Icon from 'react-native-vector-icons/Feather';
 import { Picker } from '@react-native-picker/picker';
-import { View, Text, TouchableOpacity, TextInput, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, ScrollView, Alert } from "react-native";
 import { AuthContext } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
 import { styles } from "./styles";
@@ -96,11 +96,14 @@ export default function ViagemScreen() {
         status: "",
       });
       fetchViagens();
+      Alert.alert("Sucesso", "Viagem cadastrado com sucesso!");
     } catch (e: any) {
       if (e.response && e.response.data) {
         console.log('Erro detalhado:', JSON.stringify(e.response.data, null, 2));
+        Alert.alert("Erro", e.response.data.message || "Erro ao cadastrar viagem.")
       } else {
         console.log('Erro inesperado:', e.message || e);
+        Alert.alert("Erro", "Erro ao cadastrar viagem.");
       }
     }
 
@@ -118,6 +121,7 @@ export default function ViagemScreen() {
       setEditing(false);
       setEditingId(null);
       fetchViagens();
+      Alert.alert("Sucesso", "Viagem atualizado com sucesso!");
     } catch (e) {
       console.log(e);
     } finally {
@@ -129,6 +133,7 @@ export default function ViagemScreen() {
     try {
       await api.delete(`/viagem/${id}`);
       setViagens(viagens.filter((v) => v.id !== id));
+      Alert.alert("Sucesso", "Viagem excluído com sucesso!");
     } catch (e) {
       console.log(e);
     }

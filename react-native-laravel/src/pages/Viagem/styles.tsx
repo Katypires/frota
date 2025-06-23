@@ -194,5 +194,35 @@ export const styles = StyleSheet.create({
         color: "#FFF",
         fontWeight: "bold",
     },
+    card: {
+        backgroundColor: '#fff',
+        borderRadius: 12,
+        padding: 16,
+        marginBottom: 12,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 4,
+      },
+      
+      cardTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 6,
+      },
+      
+      cardText: {
+        fontSize: 14,
+        color: '#555',
+        marginBottom: 4,
+      },
+      
+      cardActions: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        marginTop: 12,
+      },
+      
 });
 

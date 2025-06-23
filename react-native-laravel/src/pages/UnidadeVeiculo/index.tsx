@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import Icon from 'react-native-vector-icons/Feather';
 import { Picker } from '@react-native-picker/picker';
-import { View, Text, TouchableOpacity, TextInput, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, ScrollView, Alert } from "react-native";
 import { AuthContext } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
 import { styles } from "./styles";
@@ -62,6 +62,7 @@ export default function UnidadeVeiculoScreen() {
             await api.post("/unidade_veiculo", formData);
             setFormData({ unidade_id: "", veiculo_id: "", status: "" });
             fetchUnidadeVeiculos();
+            Alert.alert("Sucesso", "Unidade Veículo adicionado com sucesso!");
         } catch (e) {
             console.log(e);
         } finally {
@@ -79,6 +80,7 @@ export default function UnidadeVeiculoScreen() {
             setEditing(false);
             setEditingId(null);
             fetchUnidadeVeiculos();
+            Alert.alert("Sucesso", "Unidade Veículo atualizado com sucesso!");
         } catch (e) {
             console.log(e);
         } finally {
@@ -90,6 +92,7 @@ export default function UnidadeVeiculoScreen() {
         try {
             await api.delete(`/unidade_veiculo/${id}`);
             setUnidadeVeiculos(unidadeVeiculos.filter((m) => m.id !== id));
+            Alert.alert("Sucesso", "Unidade Veículo excluído com sucesso!");
         } catch (e) {
             console.log(e);
         }

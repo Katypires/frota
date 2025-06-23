@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import Icon from 'react-native-vector-icons/Feather';
-import { View, Text, TouchableOpacity, TextInput, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, ScrollView, Alert } from "react-native";
 import { AuthContext } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
 import { styles } from "./styles";
@@ -55,15 +55,27 @@ export default function Motorista() {
     }
 
     async function handleSubmit() {
-        if (!formData.profissional_id || !formData.cnh || !formData.validade || !formData.categoria || !formData.user_id || !formData.status) return;
-
+        if (!formData.profissional_id || !formData.user_id || formData.status === "") {
+            Alert.alert("Erro", "Preencha todos os campos obrigatórios.");
+            return;
+        }
+    
+        const formattedData = {
+            ...formData,
+            categoria: formData.categoria ? formData.categoria.split(',') : [], 
+            status: formData.status === 'Ativo' ? true : false, 
+        };
+    
         setLoading(true);
         try {
-            const response = await api.post("/motorista", formData);
+            const response = await api.post("/motorista", formattedData);
             setFormData({ profissional_id: "", cnh: "", validade: "", categoria: "", user_id: "", status: "" });
             fetchMotoristas();
+    
+            Alert.alert("Sucesso", "Motorista cadastrado com sucesso!");
         } catch (e) {
-            console.log(e);
+            console.error('Erro ao cadastrar motorista:', e?.response?.data || e.message);
+            Alert.alert("Erro", "Ocorreu um erro ao cadastrar o motorista. Verifique os dados e tente novamente.");
         } finally {
             setLoading(false);
         }
@@ -79,6 +91,9 @@ export default function Motorista() {
             setEditing(false);
             setEditingId(null);
             fetchMotoristas();
+
+            Alert.alert("Sucesso", "Motorista atualizado com sucesso!");
+
         } catch (e) {
             console.log(e);
         } finally {
@@ -90,6 +105,7 @@ export default function Motorista() {
         try {
             await api.delete(`/motorista/${id}`);
             setMotoristas(motoristas.filter((m) => m.id !== id));
+            Alert.alert("Sucesso", "Motorista excluído com sucesso!");
         } catch (e) {
             console.log(e);
         }

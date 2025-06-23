@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import Icon from 'react-native-vector-icons/Feather';
-import { View, Text, TouchableOpacity, TextInput, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, ScrollView, Alert } from "react-native";
 import { AuthContext } from "../../contexts/AuthContext";
 import { api } from "../../services/api";
 import { styles } from "./styles";
@@ -59,6 +59,7 @@ export default function Veiculo() {
             const response = await api.post("/veiculo", formData);
             setFormData({ nome: "", marca: "", placa: "", modelo: "", status: "" });
             fetchVeiculos();
+            Alert.alert("Sucesso", "Veiculo cadastrado com sucesso!");
         } catch (e) {
             console.log(e);
         } finally {
@@ -76,6 +77,7 @@ export default function Veiculo() {
             setEditing(false);
             setEditingId(null);
             fetchVeiculos();
+            Alert.alert("Sucesso", "Veiculo atualizado com sucesso!");
         } catch (e) {
             console.log(e);
         } finally {
@@ -87,6 +89,7 @@ export default function Veiculo() {
         try {
             await api.delete(`/veiculo/${id}`);
             setVeiculos(veiculos.filter((m) => m.id !== id));
+            Alert.alert("Sucesso", "Veiculo excluído com sucesso!");
         } catch (e) {
             console.log(e);
         }
