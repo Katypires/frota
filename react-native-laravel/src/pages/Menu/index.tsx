@@ -66,7 +66,6 @@ export default function Menu() {
     async function handleDeleteItem(id: string | number) {
         try {
             await api.delete(`/item/${id}`);
-            //remover da tabela
             setItems(items.filter((item) => item.id !== id));
         } catch (e) {
             console.log(e);

@@ -9,12 +9,14 @@ use Illuminate\Support\Facades\Validator;
 
 class ViagemController extends Controller
 {
-    public function index(){
-        return response()->json(
-            Viagem::with(['veiculo', 'motorista'])
-                ->select('id', 'veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'nota', 'status')
-                ->get()
-        );
+    public function index()
+    {
+        $viagens = Viagem::with([
+            'veiculo',
+            'motorista.profissional.user'
+        ])->get();
+
+        return response()->json($viagens);
     }
 
     public function store(Request $request)
@@ -23,12 +25,9 @@ class ViagemController extends Controller
             'veiculo_id' => 'required|exists:veiculos,id',
             'motorista_id' => 'required|exists:motoristas,id',
             'data_viagem' => 'required|date',
-            'data_saida' => 'required|date_format:Y-m-d H:i',
-            'km_saida' => 'required|integer',
-            'local_saida' => 'required|string',
-            'local_destino' => 'required|string',
+            'nivel_combustivel' => 'nullable|numeric',
             'nota' => 'nullable|string',
-            'status' => 'nullable|string'
+            'status' => 'required|in:aberto,finalizado',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -36,12 +35,12 @@ class ViagemController extends Controller
                 'mensagens' => $validator->errors()
             ], 400);
         }
-        return response()->json(Viagem::create($request->only(['veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'nota', 'status'])), 201);
+        return response()->json(Viagem::create($request->only(['veiculo_id', 'motorista_id', 'data_viagem', 'nivel_combustivel', 'nota', 'status'])), 201);
     }
 
     public function show($id)
     {
-        $viagem = Viagem::select('id', 'veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'nota', 'status')->find($id);
+        $viagem = Viagem::select('id', 'veiculo_id', 'motorista_id', 'data_viagem', 'nivel_combustivel', 'nota', 'status')->find($id);
         return $viagem ? response()->json($viagem) : response()->json(['error' => 'Viagem não encontrada'], 404);
     }
 
@@ -51,17 +50,14 @@ class ViagemController extends Controller
             'veiculo_id' => 'required|exists:veiculos,id',
             'motorista_id' => 'required|exists:motoristas,id',
             'data_viagem' => 'required|date',
-            //'data_saida' => 'date_format:Y-m-d H:i',
-            'km_saida' => 'required|integer',
-            'local_saida' => 'required|string',
-            'local_destino' => 'required|string',
+            'nivel_combustivel' => 'nullable|numeric',
             'nota' => 'nullable|string',
-            'status' => 'nullable|string'
+            'status' => 'required|in:aberto,finalizado',
         ]);
         if ($validator->fails()) return response()->json(['error' => 'Dados inválidos'], 400);
         $viagem = Viagem::find($id);
         if (!$viagem) return response()->json(['error' => 'Viagem não encontrada'], 404);
-        $viagem->update($request->only(['veiculo_id', 'motorista_id', 'data_viagem', 'data_saida', 'km_saida', 'local_saida', 'local_destino', 'nota', 'status']));
+        $viagem->update($request->only(['veiculo_id', 'motorista_id', 'data_viagem', 'nivel_combustivel', 'nota', 'status']));
         return response()->json($viagem);
     }
 

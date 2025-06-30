@@ -91,4 +91,18 @@ class MotoristaController extends Controller
 
         return response()->json(['success' => true]);
     }
+    public function getByUserId($user_id)
+    {
+        try {
+            $motorista = Motorista::where('user_id', $user_id)->first();
+
+            if (!$motorista) {
+                return response()->json(['message' => 'Motorista não encontrado'], 404);
+            }
+
+            return response()->json($motorista);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Erro ao buscar motorista', 'details' => $e->getMessage()], 500);
+        }
+    }
 }

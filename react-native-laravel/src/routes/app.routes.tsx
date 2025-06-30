@@ -33,7 +33,7 @@ function AppRoutes() {
                 name="Motorista"
                 component={Motorista}
                 options={{
-                    title: "Motoristas",
+                    title: "Motorista",
                     headerStyle: {
                         backgroundColor: '#333',
                     },

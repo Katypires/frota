@@ -6,7 +6,6 @@ import { api } from "../../services/api";
 import { styles } from "./styles";
 import Checkbox from "expo-checkbox";
 
-
 interface Motorista {
     id: string | number;
     profissional_id: string | number;
@@ -27,7 +26,7 @@ interface FormData {
 }
 
 export default function Motorista() {
-    const { signOut } = useContext(AuthContext);
+    const { user, signOut } = useContext(AuthContext); 
     const [motoristas, setMotoristas] = useState<Motorista[]>([]);
     const [loading, setLoading] = useState(false);
     const [editing, setEditing] = useState(false);
@@ -41,6 +40,28 @@ export default function Motorista() {
         user_id: "",
         status: "",
     });
+
+    useEffect(() => {
+        async function fetchProfissionalId() {
+            if (user?.id) {
+                try {
+                    const response = await api.get(`/profissional/user/${user.id}`);  
+                    const profissional = response.data;
+
+                    setFormData(prev => ({
+                        ...prev,
+                        user_id: user.id,
+                        profissional_id: profissional.id
+                    }));
+                } catch (error) {
+                    console.log("Erro ao buscar profissional:", error);
+                    Alert.alert("Erro", "Não foi possível carregar os dados do profissional.");
+                }
+            }
+        }
+
+        fetchProfissionalId();
+    }, [user]);
 
     async function fetchMotoristas() {
         setLoading(true);
@@ -59,23 +80,30 @@ export default function Motorista() {
             Alert.alert("Erro", "Preencha todos os campos obrigatórios.");
             return;
         }
-    
+
         const formattedData = {
             ...formData,
-            categoria: formData.categoria ? formData.categoria.split(',') : [], 
-            status: formData.status === 'Ativo' ? true : false, 
+            categoria: formData.categoria ? formData.categoria.split(',') : [],
+            status: formData.status === 'Ativo' ? true : false,
         };
-    
+
         setLoading(true);
         try {
-            const response = await api.post("/motorista", formattedData);
-            setFormData({ profissional_id: "", cnh: "", validade: "", categoria: "", user_id: "", status: "" });
+            await api.post("/motorista", formattedData);
+            setFormData({
+                profissional_id: formData.profissional_id,
+                cnh: "",
+                validade: "",
+                categoria: "",
+                user_id: formData.user_id,
+                status: "",
+            });
             fetchMotoristas();
-    
+
             Alert.alert("Sucesso", "Motorista cadastrado com sucesso!");
         } catch (e) {
             console.error('Erro ao cadastrar motorista:', e?.response?.data || e.message);
-            Alert.alert("Erro", "Ocorreu um erro ao cadastrar o motorista. Verifique os dados e tente novamente.");
+            Alert.alert("Erro", "Erro ao cadastrar o motorista.");
         } finally {
             setLoading(false);
         }
@@ -87,13 +115,19 @@ export default function Motorista() {
         setLoading(true);
         try {
             await api.put(`/motorista/${editingId}`, formData);
-            setFormData({ profissional_id: "", cnh: "", validade: "", categoria: "", user_id: "", status: "" });
+            setFormData({
+                profissional_id: formData.profissional_id,
+                cnh: "",
+                validade: "",
+                categoria: "",
+                user_id: formData.user_id,
+                status: "",
+            });
             setEditing(false);
             setEditingId(null);
             fetchMotoristas();
 
             Alert.alert("Sucesso", "Motorista atualizado com sucesso!");
-
         } catch (e) {
             console.log(e);
         } finally {
@@ -136,22 +170,14 @@ export default function Motorista() {
         fetchMotoristas();
     }, []);
 
-    return (
-        <ScrollView
-            style={styles.container}
-            contentContainerStyle={{ paddingBottom: 100 }}
-        >
-            {/* <View style={styles.header}>
-                <Text style={styles.headerText}>Gerenciamento de Motoristas</Text>
-                <TouchableOpacity style={styles.logoutButton} onPress={signOut}>
-                    <Text style={styles.logoutText}>SAIR</Text>
-                </TouchableOpacity>
-            </View> */}
+    const visibleFields = ["cnh", "validade", "categoria", "status"];
 
+    return (
+        <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 100 }}>
             <View style={styles.formContainer}>
                 <Text style={styles.formTitle}>{editing ? "Editar Motorista" : "Adicionar Motorista"}</Text>
 
-                {["profissional_id", "cnh", "validade", "categoria", "user_id", "status"].map((field) => (
+                {visibleFields.map((field) => (
                     field === "status" ? (
                         <View key="status" style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
                             <Checkbox
@@ -191,8 +217,8 @@ export default function Motorista() {
 
                 <View style={styles.tableHeader}>
                     <Text style={[styles.tableHeaderText, styles.idColumn]}>ID</Text>
-                    <Text style={[styles.tableHeaderText, styles.nameColumn]}>Nome</Text>
-                    <Text style={[styles.tableHeaderText, styles.matriculaColumn]}>Matrícula</Text>
+                    <Text style={[styles.tableHeaderText, styles.nameColumn]}>CNH</Text>
+                    <Text style={[styles.tableHeaderText, styles.matriculaColumn]}>Categoria</Text>
                     <Text style={[styles.tableHeaderText, styles.actionColumn]}>Ações</Text>
                 </View>
 
@@ -205,8 +231,8 @@ export default function Motorista() {
                         motoristas.map((motorista) => (
                             <View key={String(motorista.id)} style={styles.tableRow}>
                                 <Text style={[styles.tableCell, styles.idColumn]}>{motorista.id}</Text>
-                                <Text style={[styles.tableCell, styles.nameColumn]}>{motorista.profissional_id}</Text>
-                                <Text style={[styles.tableCell, styles.matriculaColumn]}>{motorista.validade}</Text>
+                                <Text style={[styles.tableCell, styles.nameColumn]}>{motorista.cnh}</Text>
+                                <Text style={[styles.tableCell, styles.matriculaColumn]}>{motorista.categoria}</Text>
                                 <View style={[styles.actionColumn, styles.actionButtons]}>
                                     <TouchableOpacity style={styles.editButton} onPress={() => loadEditItem(motorista.id)}>
                                         <Icon name="edit" size={16} color="#999" />

@@ -88,4 +88,15 @@ class ProfissionalController extends Controller
 
         return response()->json(['success' => true]);
     }
+
+    public function getByUserId($user_id)
+    {
+        $profissional = Profissional::where('user_id', $user_id)->first();
+
+        if (!$profissional) {
+            return response()->json(['message' => 'Profissional não encontrado'], 404);
+        }
+
+        return response()->json($profissional);
+    }
 }

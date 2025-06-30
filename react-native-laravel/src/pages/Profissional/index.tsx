@@ -1,5 +1,4 @@
-// src/pages/Profissional/index.tsx
-import React, { useContext, useState, useEffect } from "react";
+ import React, { useContext, useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, TextInput, ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
 import Checkbox from "expo-checkbox";

@@ -29,6 +29,9 @@ Route::post("/auth/refresh", [AuthController::class, 'refresh']);
 Route::post("/user", [AuthController::class, 'create']);
 Route::get("/user", [UserController::class, 'read']);
 Route::post('/register', [AuthController::class, 'register']);
+Route::get('/profissional/user/{user_id}', [ProfissionalController::class, 'getByUserId']);
+Route::get('/motorista/user/{user_id}', [MotoristaController::class, 'getByUserId']);
+
 
 //ROTAS ITEM
 Route::resource('/item', ItemController::class);
