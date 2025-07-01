@@ -160,6 +160,17 @@ export const styles = StyleSheet.create({
        
          
     },
+    refreshButton: {
+        marginTop: 16,
+        backgroundColor: "#6979F8",
+        borderRadius: 8,
+        paddingVertical: 12,
+        alignItems: "center",
+    },
+    refreshButtonText: {
+        color: "#FFF",
+        fontWeight: "bold",
+    },
     
 
 });

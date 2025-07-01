@@ -19,7 +19,7 @@ export default function Home() {
         { title: "Unidades", icon: "layers", route: "Unidade" },
         { title: "Veiculos", icon: "truck", route: "Veiculo" },
         { title: "Unidade Veiculos", icon: "grid", route: "UnidadeVeiculo" },
-        { title: "Viagem", icon: "map", route: "Viagem" },
+        { title: "Viagem", icon: "map", route: "ReadQrcode" },
         { title: "Finalizar Viagem", icon: "check-circle", route: "FinalizarViagem" },
         { title: "Câmera", icon: "camera", route: "Camera" },
         { title: "Gerar Qrcode", icon: "", route: "GerarQrcode" },

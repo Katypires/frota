@@ -1,0 +1,19 @@
+*Viagem 
+veiculo=qrcode
+motorista=logado
+botão=iniciar viagem/ abre a tela de viagem
+
+data e hora atual= escondido
+
+local saida
+local destino
+km-inicial
+status= em andamento
+botão salvar
+
+*finalizar viagem
+km-final
+data e hora da finalização
+
+na tabela 
+listar viagem em andamento e do próprio motorista

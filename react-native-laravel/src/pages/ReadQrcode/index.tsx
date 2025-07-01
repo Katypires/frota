@@ -1,9 +1,12 @@
 import { Link } from "expo-router";
 import { BarcodeScanningResult, CameraView, useCameraPermissions } from "expo-camera";
-import { Button, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Button, Image, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useRef, useState } from "react";
 import Feather from 'react-native-vector-icons/Feather';
 import { styles } from "./styles";
+import { useNavigation } from '@react-navigation/native';
+import { api } from "../../services/api";
+
 
 type CameraFacing = "front" | "back";
 type CameraFlash = "on" | "off" | "auto";
@@ -18,6 +21,8 @@ export default function Camera() {
     const [photoFile, setPhotoFile] = useState<string | null>(null);
     const [permission, requestPermission] = useCameraPermissions();
     const [qrError, setQrError] = useState<string | null>(null);
+    const navigation = useNavigation();
+
 
     const cameraRef = useRef<CameraView>(null);
 
@@ -48,17 +53,33 @@ export default function Camera() {
                 break;
         }
     }
-    const handleBarCode = (result: BarcodeScanningResult) => {
+    const handleBarCode = async (result: BarcodeScanningResult) => {
         try {
             const json = JSON.parse(result.data);
-            setQrResult(json);
+
+            if (!json.id) {
+                setQrResult(null);
+                setQrError("QR Code inválido: sem identificador de veículo.");
+                return;
+            }
+
+            const response = await api.get(`/veiculo/${json.id}`);
+
+            setQrResult(response.data);
             setQrError(null);
-        } catch (error) {
-            console.warn("QR Code inválido:", error);
-            setQrResult(null);
-            setQrError("QR Code inválido. Tente novamente.");
+        } catch (error: any) {
+            if (error.response?.status === 404) {
+                setQrResult(null);
+                setQrError("Veículo não encontrado no sistema.");
+            } else {
+                // Qualquer outro erro (JSON inválido ou de rede)
+                setQrResult(null);
+                setQrError("Erro ao ler QR Code ou buscar veículo.");
+                console.warn("Erro abordagem QR:", error);
+            }
         }
     };
+
 
 
     const handleZoom = () => {
@@ -110,15 +131,15 @@ export default function Camera() {
                     </View>
                     <View style={styles.bottomOverlay} />
                 </View>
-            <View style={styles.buttonContainer}>
-                <Pressable style={[styles.button, { marginLeft: 'auto' }]} onPress={handleZoom}>
-                    <Feather name="zoom-in" size={20} color="#FFF" />
-                </Pressable>
+                <View style={styles.buttonContainer}>
+                    <Pressable style={[styles.button, { marginLeft: 'auto' }]} onPress={handleZoom}>
+                        <Feather name="zoom-in" size={20} color="#FFF" />
+                    </Pressable>
 
-                <Pressable style={[styles.button, { marginLeft: 'auto' }]} onPress={handleCameraFlash}>
-                    <Feather name={cameraFlash === 'off' ? 'zap-off' : 'zap'} size={20} color="#FFF" />
-                </Pressable>
-            </View>
+                    <Pressable style={[styles.button, { marginLeft: 'auto' }]} onPress={handleCameraFlash}>
+                        <Feather name={cameraFlash === 'off' ? 'zap-off' : 'zap'} size={20} color="#FFF" />
+                    </Pressable>
+                </View>
             </CameraView>
 
             <Text style={styles.textMensagem}>Aponte a câmera para o QR Code</Text>
@@ -133,6 +154,20 @@ export default function Camera() {
                     <Text style={styles.qrText}>Marca: {qrResult.marca}</Text>
                     <Text style={styles.qrText}>Modelo: {qrResult.modelo}</Text>
                     <Text style={styles.qrText}>Status: {qrResult.status}</Text>
+                    {qrError && (
+                        <View style={{ marginTop: 12, padding: 8, backgroundColor: '#fee', borderRadius: 4 }}>
+                            <Text style={{ color: 'red', textAlign: 'center' }}>{qrError}</Text>
+                        </View>
+                    )}
+
+                    {qrResult && !qrError && (
+                        <TouchableOpacity
+                            style={styles.refreshButton}
+                            onPress={() => navigation.navigate('Viagem', { veiculo: qrResult })}
+                        >
+                            <Text style={styles.refreshButtonText}>Ir para Viagem</Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
             )}
             {qrError && (

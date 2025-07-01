@@ -8,6 +8,7 @@ import { styles } from "./styles";
 import Checkbox from "expo-checkbox";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Platform } from 'react-native';
+import { useRoute } from '@react-navigation/native';
 
 interface Viagem {
   id: string | number;
@@ -48,6 +49,9 @@ export default function ViagemScreen() {
   const [dataHoraAtual, setDataHoraAtual] = useState<string>('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const route = useRoute();
+  const veiculoQr = (route.params as any)?.veiculo;
+
 
 
   const [formData, setFormData] = useState<FormData>({
@@ -82,6 +86,12 @@ export default function ViagemScreen() {
   useEffect(() => {
     fetchViagens();
     api.get("/veiculo").then((res) => setVeiculos(res.data));
+    if (veiculoQr?.id) {
+      setFormData((prev) => ({
+        ...prev,
+        veiculo_id: veiculoQr.id,
+      }));
+    }
     api.get("/motorista").then((res) => setMotoristas(res.data));
 
     if (user?.id) {
@@ -116,18 +126,18 @@ export default function ViagemScreen() {
 
   const onChangeDate = (event: any, date?: Date) => {
     if (event.type === "set" && date) {
-      console.log("Data selecionada:", date);  
+      console.log("Data selecionada:", date);
       setSelectedDate(date);
 
-      const dataFormatada = date.toISOString().split('T')[0];  
+      const dataFormatada = date.toISOString().split('T')[0];
       setFormData((prev) => ({
         ...prev,
         data_viagem: dataFormatada,
       }));
 
-      console.log("Data atual no formData:", dataFormatada);  
+      console.log("Data atual no formData:", dataFormatada);
     } else {
-      setShowDatePicker(false);  
+      setShowDatePicker(false);
     }
   };
 

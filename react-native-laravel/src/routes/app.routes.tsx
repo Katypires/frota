@@ -18,6 +18,12 @@ const Stack = createNativeStackNavigator();
 
 export type StackParamsList = {
     Menu: undefined;
+    Home: undefined;
+    Motorista: undefined;
+    Profissional: undefined;
+    Unidade: undefined;
+    Veiculo: undefined;
+    UnidadeVeiculo: undefined;
 };
 
 function AppRoutes() {
