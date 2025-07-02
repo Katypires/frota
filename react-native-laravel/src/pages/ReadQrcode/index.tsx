@@ -6,6 +6,8 @@ import Feather from 'react-native-vector-icons/Feather';
 import { styles } from "./styles";
 import { useNavigation } from '@react-navigation/native';
 import { api } from "../../services/api";
+import { ActivityIndicator } from "react-native";
+
 
 
 type CameraFacing = "front" | "back";
@@ -22,6 +24,10 @@ export default function Camera() {
     const [permission, requestPermission] = useCameraPermissions();
     const [qrError, setQrError] = useState<string | null>(null);
     const navigation = useNavigation();
+    const [scanned, setScanned] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+
 
 
     const cameraRef = useRef<CameraView>(null);
@@ -54,6 +60,10 @@ export default function Camera() {
         }
     }
     const handleBarCode = async (result: BarcodeScanningResult) => {
+        //console.log("Dados do QR Code:", result.data);
+        if (scanned) return;
+        setScanned(true);
+
         try {
             const json = JSON.parse(result.data);
 
@@ -63,22 +73,26 @@ export default function Camera() {
                 return;
             }
 
+            setIsLoading(true);
             const response = await api.get(`/veiculo/${json.id}`);
+            //console.log("Resposta da API:", response.data);
 
             setQrResult(response.data);
             setQrError(null);
         } catch (error: any) {
+            setQrResult(null);
             if (error.response?.status === 404) {
-                setQrResult(null);
                 setQrError("Veículo não encontrado no sistema.");
             } else {
-                // Qualquer outro erro (JSON inválido ou de rede)
-                setQrResult(null);
                 setQrError("Erro ao ler QR Code ou buscar veículo.");
                 console.warn("Erro abordagem QR:", error);
             }
+        } finally {
+            setIsLoading(false);
         }
-    };
+    }
+
+
 
 
 
@@ -143,6 +157,10 @@ export default function Camera() {
             </CameraView>
 
             <Text style={styles.textMensagem}>Aponte a câmera para o QR Code</Text>
+            {isLoading && (
+                <ActivityIndicator size="large" color="#0000ff" style={{ marginVertical: 16 }} />
+            )}
+
             {photoFile &&
                 <Image source={{ uri: photoFile }} style={styles.photo} />
             }
@@ -168,6 +186,18 @@ export default function Camera() {
                             <Text style={styles.refreshButtonText}>Ir para Viagem</Text>
                         </TouchableOpacity>
                     )}
+
+                    <TouchableOpacity
+                        style={styles.refreshButton}
+                        onPress={() => {
+                            setQrResult(null);
+                            setQrError(null);
+                            setScanned(false);
+                        }}
+                    >
+                        <Text style={styles.refreshButtonText}>Escanear outro QR Code</Text>
+                    </TouchableOpacity>
+
                 </View>
             )}
             {qrError && (
